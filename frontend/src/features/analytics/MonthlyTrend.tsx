@@ -39,7 +39,7 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
 
   return (
     <div className={styles.wrap}>
-      <ResponsiveContainer width="100%" height={228}>
+      <ResponsiveContainer width="100%" height={300}>
         <BarChart data={points} margin={{ top: 8, right: 4, bottom: 0, left: -12 }} barGap={2}>
           {/* Vertical gradients, so each bar is lit from the top rather than
               being a flat block of colour. */}
@@ -130,12 +130,14 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
                 <Cell
                   key={point.month}
                   className={styles.bar}
+                  // One hue for the series. The busiest month is set apart by
+                  // a darker step of the same hue, not by a second colour.
                   fill={
                     dimmed
-                      ? "url(#bar-dim)"
+                      ? "var(--chart-mark-quiet)"
                       : isPeak
-                        ? "url(#bar-peak)"
-                        : "url(#bar-base)"
+                        ? "var(--accent-text)"
+                        : "var(--chart-mark)"
                   }
                 />
               );
@@ -146,7 +148,7 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
 
       <p className={styles.caption}>
         <span className={styles.key}>
-          <span className={`${styles.dot} ${styles.dotPeak}`} aria-hidden /> Highest month
+          <span className={`${styles.dot} ${styles.dotPeak}`} aria-hidden /> Busiest month
         </span>
         <span className={styles.key}>
           <span className={`${styles.dot} ${styles.dotBase}`} aria-hidden /> Other months

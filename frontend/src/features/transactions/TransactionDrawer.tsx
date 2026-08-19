@@ -114,7 +114,7 @@ export function TransactionDrawer({
           {row.quality_flags.length > 0 ? (
             <section className={styles.section}>
               <h3 className={styles.sectionTitle}>
-                What we fixed on import
+                Fixed on import
                 <span className={styles.countPill}>{row.quality_flags.length}</span>
               </h3>
               <ul className={styles.flags}>
@@ -131,7 +131,7 @@ export function TransactionDrawer({
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>Source record</h3>
             <p className={styles.sectionNote}>
-              Exactly as it appeared in transactions.json, before normalisation.
+              Straight from the file, untouched.
             </p>
             {detail ? (
               <pre className={styles.json}>{JSON.stringify(detail.source_row, null, 2)}</pre>

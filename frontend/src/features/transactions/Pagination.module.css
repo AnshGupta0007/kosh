@@ -5,8 +5,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   padding: var(--space-3) var(--space-5);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--surface-2);
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
@@ -19,13 +19,13 @@
 }
 
 .summary strong {
-  color: var(--text-primary);
+  color: var(--text);
   font-weight: var(--weight-semibold);
 }
 
 .timing {
   padding: 1px var(--space-2);
-  background: var(--surface-3);
+  background: var(--bg-sunken);
   border-radius: var(--radius-xs);
   color: var(--text-tertiary);
   font-family: var(--font-mono);
@@ -86,8 +86,8 @@
 .step:hover:not(:disabled),
 .page:hover {
   background: var(--surface-hover);
-  border-color: var(--border-default);
-  color: var(--text-primary);
+  border-color: var(--rule);
+  color: var(--text);
 }
 
 .step:disabled {
@@ -96,14 +96,14 @@
 }
 
 .current {
-  background: var(--accent-soft);
+  background: var(--accent-quiet);
   border-color: color-mix(in srgb, var(--accent) 35%, transparent);
   color: var(--accent-text);
   font-weight: var(--weight-semibold);
 }
 
 .current:hover {
-  background: var(--accent-soft);
+  background: var(--accent-quiet);
 }
 
 .gap {

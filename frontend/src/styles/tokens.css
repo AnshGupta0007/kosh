@@ -1,136 +1,112 @@
 /* =====================================================================
-   Kosh design tokens
-   ---------------------------------------------------------------------
-   Every colour, space, radius, shadow and type step in the app resolves
-   to something declared here. Components never hard-code a hex value, so
-   the whole product re-themes from this one file.
+   Kosh design tokens — editorial, light-first.
 
-   Structure:
-     1. primitives   raw values, no meaning attached
-     2. semantics    what a primitive means in this product (surface, text)
-     3. themes       the semantic layer re-pointed for light mode
+   The product is a consumer money app, and it is read the way a statement
+   is read: figures first, structure second, chrome never. That produces
+   three rules the whole system follows.
+
+     1. Paper, not panels. Hairline rules separate content; boxes are used
+        only where something is genuinely a discrete object (the card, a
+        reward, a dialog). Most dashboards drown in nested grey boxes.
+     2. One data hue. Every chart mark is the same green, because the
+        categories here are nominal and magnitude is what is being
+        compared — spending the colour channel on identity would be
+        re-encoding what bar length already says.
+     3. Colour is reserved, never decorative. Green = data and success.
+        Gold = coins, and nothing else, ever. Red/amber = status only,
+        and always beside a text label.
+
+   Every chart colour below was checked with the dataviz validator
+   (lightness band, chroma floor, CVD separation, contrast vs surface);
+   the dark steps are chosen for the dark surface, not flipped from light.
    ===================================================================== */
 
 :root {
   /* -- 1. primitives ------------------------------------------------ */
 
-  /* Neutrals carry a violet-navy cast rather than being true grey. Pure
-     neutral greys read clinical next to gold; the slight cool tint is what
-     makes the gold look like metal instead of mustard. */
-  --ink-950: #07060d;
-  --ink-900: #0b0a13;
-  --ink-850: #100e1a;
-  --ink-800: #151221;
-  --ink-750: #1b1829;
-  --ink-700: #232034;
-  --ink-600: #302c45;
-  --ink-500: #46415f;
-  --ink-400: #6d6788;
-  --ink-300: #9d97b5;
-  --ink-200: #c6c2d6;
-  --ink-100: #e6e4ee;
-  --ink-050: #f3f2f8;
-  --ink-000: #ffffff;
+  /* Warm neutrals. A cool grey reads like a spreadsheet; the warmth is
+     what makes it read like paper. */
+  --paper-50: #fdfcfa;
+  --paper-100: #fbfaf8;
+  --paper-200: #f5f3ef;
+  --paper-300: #ebe8e2;
+  --paper-400: #d9d5cc;
 
-  /* Gold is the product's signature — it is the coin. Used sparingly:
-     the balance, the primary action, the one number that matters. */
-  --gold-100: #fdf3d9;
-  --gold-300: #f2d68a;
-  --gold-400: #e9c25c;
-  --gold-500: #dfa93a;
-  --gold-600: #c08a24;
-  --gold-700: #96691a;
+  --ink-900: #14120f;
+  --ink-700: #37332c;
+  --ink-600: #4a463f;
+  --ink-500: #6b655c;
+  --ink-400: #8a837a;
+  --ink-300: #a9a299;
 
-  --teal-400: #3ecfb2;
-  --teal-500: #1fb59a;
-  --teal-600: #0f8c78;
+  /* Deep green is the brand: buttons, links, the wordmark. Dark enough
+     for body-text contrast on paper (≈8:1). */
+  --green-900: #073d27;
+  --green-800: #094a2f;
+  --green-700: #0b5d3b;
+  --green-600: #14824f;
+  --green-500: #1b9a63; /* validated chart mark, light */
+  --green-400: #28ae74; /* validated chart mark, dark  */
+  --green-300: #6ecfa4;
+  --green-100: #d8f0e4;
 
-  --coral-400: #ff7a6b;
-  --coral-500: #f2564a;
-  --coral-600: #cf3b33;
+  /* Gold is the coin, and only the coin. */
+  --gold-700: #8a6209;
+  --gold-600: #b07d12;
+  --gold-500: #e0a800;
+  --gold-300: #f0cd63;
+  --gold-100: #fbf1d6;
 
-  --violet-400: #a78bfa;
-  --violet-500: #8b6df0;
+  --red-600: #be2f26;
+  --red-500: #d6483d;
+  --red-100: #fbe6e4;
 
-  --blue-400: #6aa8ff;
-  --blue-500: #4287f5;
+  --amber-600: #a8760a;
+  --amber-500: #e0a800;
+  --amber-100: #fdf1d8;
 
   /* -- 2. semantics ------------------------------------------------- */
+  --bg: var(--paper-100);
+  --bg-sunken: var(--paper-200);
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-hover: var(--paper-200);
+  --surface-active: var(--paper-300);
 
-  /* surfaces, back to front */
-  --bg-base: var(--ink-950);
-  --bg-sunken: var(--ink-900);
-  --surface-1: var(--ink-850);
-  --surface-2: var(--ink-800);
-  --surface-3: var(--ink-750);
-  --surface-hover: var(--ink-750);
-  --surface-active: var(--ink-700);
+  /* Hairlines. There is no such thing as a heavy border in this system. */
+  --rule: rgb(20 18 15 / 9%);
+  --rule-strong: rgb(20 18 15 / 16%);
 
-  --border-subtle: rgb(255 255 255 / 9%);
-  --border-default: rgb(255 255 255 / 13%);
-  --border-strong: rgb(255 255 255 / 22%);
+  --text: var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary: var(--ink-500);
+  --text-on-accent: #ffffff;
 
-  --text-primary: var(--ink-050);
-  --text-secondary: var(--ink-300);
-  --text-tertiary: var(--ink-400);
-  --text-inverse: var(--ink-950);
+  --accent: var(--green-700);
+  --accent-hover: var(--green-800);
+  --accent-quiet: var(--green-100);
+  --accent-text: var(--green-700);
 
-  --accent: var(--gold-400);
-  --accent-strong: var(--gold-500);
-  --accent-soft: rgb(233 194 92 / 12%);
-  --accent-text: var(--gold-300);
-  --on-accent: #241b04;
+  --coin: var(--gold-600);
+  --coin-bright: var(--gold-500);
+  --coin-quiet: var(--gold-100);
 
-  --positive: var(--teal-400);
-  --positive-soft: rgb(62 207 178 / 12%);
-  --negative: var(--coral-400);
-  --negative-soft: rgb(255 122 107 / 12%);
-  --warning: #f0b429;
-  --warning-soft: rgb(240 180 41 / 12%);
-  --info: var(--blue-400);
-  --info-soft: rgb(106 168 255 / 12%);
+  --positive: var(--green-600);
+  --positive-quiet: var(--green-100);
+  --negative: var(--red-600);
+  --negative-quiet: var(--red-100);
+  --warning: var(--amber-600);
+  --warning-quiet: var(--amber-100);
 
-  --focus-ring: var(--gold-400);
+  --focus-ring: var(--green-600);
 
-  /* Chart series. Category colours come from the database hue, these are
-     the fixed slots for everything else. */
-  --chart-grid: rgb(255 255 255 / 6%);
+  /* charts */
+  --chart-mark: var(--green-500);
+  --chart-mark-quiet: rgb(27 154 99 / 18%);
+  --chart-grid: rgb(20 18 15 / 8%);
   --chart-axis: var(--ink-400);
-  --chart-primary: var(--gold-400);
-  --chart-secondary: var(--teal-400);
 
-  /* Signature gradients. Declared once so the card, the primary button and
-     the chart fills are provably the same gold. */
-  --gradient-gold: linear-gradient(135deg, #f7dfa0 0%, #e9c25c 38%, #c08a24 100%);
-  --gradient-gold-soft: linear-gradient(180deg, var(--gold-400), var(--gold-600));
-  /* The final stop stays clearly above the page background (#07060d): a card
-     whose darkest corner matches the page behind it has no corner. */
-  --gradient-card: linear-gradient(145deg, #2f2747 0%, #1b1730 45%, #151124 100%);
-  --gradient-sheen:
-    linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 14%) 45%, transparent 60%);
-
-  /* Ambient light behind the page. Two coloured pools, very low opacity —
-     enough to stop the background reading as flat black. */
-  --ambient-gold: radial-gradient(
-    900px 420px at 12% -8%,
-    rgb(233 194 92 / 13%),
-    transparent 70%
-  );
-  --ambient-violet: radial-gradient(
-    760px 400px at 88% 2%,
-    rgb(139 109 240 / 12%),
-    transparent 68%
-  );
-
-  /* The 1px lit top edge that makes a surface read as physical rather than
-     as a rectangle of colour. */
-  --edge-highlight: inset 0 1px 0 rgb(255 255 255 / 7%);
-  --glow-gold: 0 0 32px rgb(233 194 92 / 22%);
-  --glow-teal: 0 0 28px rgb(62 207 178 / 18%);
-
-  /* -- 3. space ----------------------------------------------------- */
-  /* A 4px base. Named by size, not by use, so a gap and a padding of the
-     same visual weight are literally the same token. */
+  /* -- 3. space (4px base) ------------------------------------------ */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -141,131 +117,120 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
 
-  /* -- 4. radii ----------------------------------------------------- */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  /* -- 4. radii ------------------------------------------------------ */
+  /* Restrained. Big radii read as "app template"; paper has square edges. */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-pill: 999px;
 
-  /* -- 5. elevation -------------------------------------------------- */
-  /* Two-layer shadows: a tight contact shadow plus a soft ambient one. */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
-  --shadow-md: 0 2px 4px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
-  --shadow-lg: 0 4px 8px rgb(0 0 0 / 30%), 0 24px 48px rgb(0 0 0 / 45%);
-  --shadow-glow: 0 0 0 1px rgb(233 194 92 / 25%), 0 8px 32px rgb(233 194 92 / 12%);
+  /* -- 5. elevation --------------------------------------------------
+     Almost nothing floats. Shadows are for things that genuinely sit
+     above the page: dialogs, popovers, the card. */
+  --shadow-sm: 0 1px 2px rgb(20 18 15 / 5%);
+  --shadow-md: 0 2px 4px rgb(20 18 15 / 5%), 0 8px 20px rgb(20 18 15 / 7%);
+  --shadow-lg: 0 4px 8px rgb(20 18 15 / 7%), 0 24px 56px rgb(20 18 15 / 14%);
 
-  /* -- 6. type ------------------------------------------------------- */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* -- 6. type -------------------------------------------------------
+     Two faces. Instrument Serif carries every figure that matters —
+     it is the voice of the product. Inter runs the interface and never
+     competes. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* A 1.2 modular scale, rounded to whole pixels at the small end where
-     fractional sizes make text look blurry. */
-  --text-2xs: 0.6875rem; /* 11 */
-  --text-xs: 0.75rem;    /* 12 */
-  --text-sm: 0.8125rem;  /* 13 */
-  --text-base: 0.875rem; /* 14 — the app's body size; this is a dense tool */
-  --text-md: 1rem;       /* 16 */
-  --text-lg: 1.125rem;   /* 18 */
-  --text-xl: 1.375rem;   /* 22 */
-  --text-2xl: 1.75rem;   /* 28 */
-  --text-3xl: 2.25rem;   /* 36 */
-  --text-4xl: 3rem;      /* 48 */
+  /* Sized up a full step across the board. The first pass ran a 13px body
+     with 11px labels — console sizing on a page that is meant to be read,
+     which made the whole thing feel cramped and cheap. */
+  --text-2xs: 0.75rem;   /* 12 — the smallest thing allowed on screen */
+  --text-xs: 0.8125rem;  /* 13 */
+  --text-sm: 0.875rem;   /* 14 */
+  --text-base: 1rem;     /* 16 — body */
+  --text-md: 1.0625rem;  /* 17 */
+  --text-lg: 1.375rem;   /* 22 */
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3.25rem;
+  --text-4xl: 4.5rem;
+  --text-5xl: 6rem;
 
-  --leading-tight: 1.15;
-  --leading-snug: 1.35;
-  --leading-normal: 1.55;
+  --leading-tight: 1.05;
+  --leading-snug: 1.45;
+  --leading-normal: 1.6;
 
-  --tracking-tight: -0.02em;
+  --tracking-tight: -0.025em;
   --tracking-normal: 0;
-  --tracking-wide: 0.04em;
-  --tracking-caps: 0.08em;
+  --tracking-caps: 0.09em;
 
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
-  --weight-bold: 700;
 
   /* -- 7. motion ----------------------------------------------------- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 120ms;
   --duration-base: 200ms;
-  --duration-slow: 320ms;
+  --duration-slow: 340ms;
 
   /* -- 8. layout ----------------------------------------------------- */
-  --topbar-height: 60px;
-  --content-max: 1440px;
-  --z-base: 1;
+  --topbar-height: 64px;
+  --content-max: 1240px;
   --z-sticky: 20;
   --z-drawer: 60;
   --z-modal: 80;
   --z-toast: 100;
 }
 
-/* Light theme re-points the semantic layer only. No component changes. */
-[data-theme="light"] {
-  --bg-base: #f7f7f9;
-  --bg-sunken: #eff0f4;
-  --surface-1: var(--ink-000);
-  --surface-2: var(--ink-000);
-  --surface-3: var(--ink-050);
-  --surface-hover: #f4f5f8;
-  --surface-active: #eaecf1;
+/* ---------------------------------------------------------------------
+   Dark. Not an inversion — its own steps, chosen against a dark ground
+   and validated separately. Warm neutrals become genuinely dark greys
+   with a hint of the same warmth, so the two themes feel related.
+   --------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg: #0c0d0c;
+  --bg-sunken: #090a09;
+  --surface: #141614;
+  --surface-raised: #1a1d1a;
+  --surface-hover: #1c1f1c;
+  --surface-active: #232723;
 
-  --border-subtle: rgb(14 16 24 / 7%);
-  --border-default: rgb(14 16 24 / 12%);
-  --border-strong: rgb(14 16 24 / 22%);
+  --rule: rgb(255 255 255 / 10%);
+  --rule-strong: rgb(255 255 255 / 18%);
 
-  --text-primary: #14161d;
-  --text-secondary: #545b6b;
-  --text-tertiary: #767d8d;
-  --text-inverse: var(--ink-000);
+  --text: #f3f2ef;
+  --text-secondary: #b6b1a8;
+  --text-tertiary: #8a857c;
+  --text-on-accent: #05170f;
 
-  --accent: var(--gold-600);
-  --accent-strong: var(--gold-700);
-  --accent-soft: rgb(192 138 36 / 12%);
-  --accent-text: var(--gold-700);
-  --on-accent: #ffffff;
+  --accent: var(--green-400);
+  --accent-hover: var(--green-300);
+  --accent-quiet: rgb(40 174 116 / 14%);
+  --accent-text: var(--green-300);
 
-  --positive: var(--teal-600);
-  --positive-soft: rgb(15 140 120 / 12%);
-  --negative: var(--coral-600);
-  --negative-soft: rgb(207 59 51 / 10%);
-  --warning: #a86a08;
-  --warning-soft: rgb(168 106 8 / 12%);
-  --info: #2b6fd4;
-  --info-soft: rgb(43 111 212 / 10%);
+  --coin: var(--gold-300);
+  --coin-bright: var(--gold-300);
+  --coin-quiet: rgb(240 205 99 / 12%);
 
-  --focus-ring: var(--gold-600);
+  --positive: var(--green-400);
+  --positive-quiet: rgb(40 174 116 / 14%);
+  --negative: #e8695d;
+  --negative-quiet: rgb(232 105 93 / 14%);
+  --warning: var(--gold-300);
+  --warning-quiet: rgb(240 205 99 / 12%);
 
-  --chart-grid: rgb(14 16 24 / 8%);
-  --chart-axis: #767d8d;
-  --chart-primary: var(--gold-600);
-  --chart-secondary: var(--teal-600);
+  --focus-ring: var(--green-300);
 
-  --shadow-sm: 0 1px 2px rgb(14 16 24 / 6%);
-  --shadow-md: 0 1px 2px rgb(14 16 24 / 6%), 0 8px 24px rgb(14 16 24 / 8%);
-  --shadow-lg: 0 2px 6px rgb(14 16 24 / 8%), 0 24px 48px rgb(14 16 24 / 12%);
-  --shadow-glow: 0 0 0 1px rgb(192 138 36 / 30%), 0 8px 32px rgb(192 138 36 / 10%);
+  --chart-mark: var(--green-400);
+  --chart-mark-quiet: rgb(40 174 116 / 20%);
+  --chart-grid: rgb(255 255 255 / 8%);
+  --chart-axis: #8a857c;
 
-  /* The card keeps its dark treatment in light mode — a credit card is a
-     physical object, and it does not invert just because the page did. */
-  --edge-highlight: inset 0 1px 0 rgb(255 255 255 / 80%);
-  --glow-gold: 0 0 32px rgb(192 138 36 / 16%);
-  --glow-teal: 0 0 28px rgb(15 140 120 / 14%);
-
-  --ambient-gold: radial-gradient(
-    900px 420px at 12% -8%,
-    rgb(223 169 58 / 12%),
-    transparent 70%
-  );
-  --ambient-violet: radial-gradient(
-    760px 400px at 88% 2%,
-    rgb(139 109 240 / 10%),
-    transparent 68%
-  );
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 35%), 0 8px 20px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 4px 8px rgb(0 0 0 / 40%), 0 24px 56px rgb(0 0 0 / 55%);
 }

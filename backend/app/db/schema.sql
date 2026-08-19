@@ -127,7 +127,7 @@ CREATE TABLE rewards (
     value_paise  BIGINT      NOT NULL CHECK (value_paise >= 0),
     -- NULL = unlimited stock. 0 = sold out.
     stock        INTEGER     CHECK (stock IS NULL OR stock >= 0),
-    icon         TEXT        NOT NULL DEFAULT '🎁',
+    icon         TEXT        NOT NULL DEFAULT 'parcel',
     accent       TEXT        NOT NULL DEFAULT 'amber',
     is_active    BOOLEAN     NOT NULL DEFAULT TRUE,
     sort_order   SMALLINT    NOT NULL DEFAULT 100

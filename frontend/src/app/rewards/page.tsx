@@ -16,9 +16,7 @@ export default function RewardsPage() {
         <p className={styles.eyebrow}>Coins</p>
         <h1 className={styles.heading}>Rewards</h1>
         <p className={styles.blurb}>
-          You earn one coin for every ₹100 of successful spend, up to 100 coins on
-          a single payment. Refunds and failed payments earn nothing. Spend them
-          here — the balance in the header updates the moment you confirm.
+          A coin for every ₹100 you spend. Here is what they are worth.
         </p>
       </header>
 

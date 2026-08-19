@@ -1,7 +1,7 @@
 .stat {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   min-width: 0;
 }
 
@@ -20,6 +20,8 @@
   min-width: 0;
 }
 
+/* Figures wear the display serif. In a page of 15px Inter, a 36px serif
+   number is unmistakably the thing you are meant to read. */
 .value {
   overflow: hidden;
   font-family: var(--font-display);
@@ -37,28 +39,8 @@
   line-height: var(--leading-snug);
 }
 
-/* A full rupee figure like ₹7,06,98,019 does not fit a half-width column on
-   a 360px screen at the desktop size, and an ellipsised number is useless.
-   Step the display size down instead of clipping the value. */
-@media (max-width: 620px) {
-  .value {
-    font-size: var(--text-xl);
-  }
-}
-
-@media (max-width: 380px) {
-  .value {
-    font-size: var(--text-lg);
-  }
-}
-
-/* Gold as metal rather than as a flat colour — the gradient clipped to the
-   glyphs, matching the treatment on the card's wordmark. */
 .accent .value {
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--coin);
 }
 
 .positive .value {
@@ -67,4 +49,10 @@
 
 .negative .value {
   color: var(--negative);
+}
+
+@media (max-width: 620px) {
+  .value {
+    font-size: var(--text-xl);
+  }
 }

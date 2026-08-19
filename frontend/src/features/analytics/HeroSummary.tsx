@@ -6,6 +6,7 @@ import { formatNumber, formatRupeesCompact, formatRupeesWhole } from "@/lib/form
 import { hasActiveFilters, type FilterState } from "@/lib/filters";
 import { useAnalytics, useBalance, useMe } from "@/lib/hooks/useApi";
 import { useCountUp } from "@/lib/hooks/useCountUp";
+import { useMounted } from "@/lib/hooks/useMounted";
 
 import styles from "./HeroSummary.module.css";
 
@@ -28,6 +29,7 @@ export function HeroSummary({ filters }: HeroSummaryProps) {
   const { data: analytics, isPending: loading } = useAnalytics(filters);
   const { data: balance } = useBalance();
   const { data: me } = useMe();
+  const mounted = useMounted();
   const filtered = hasActiveFilters(filters);
 
   const spend = analytics?.kpis.total_spend_paise ?? 0;
@@ -40,7 +42,7 @@ export function HeroSummary({ filters }: HeroSummaryProps) {
         last4={me?.card_last4 ?? "4291"}
         coins={balance?.balance ?? 0}
         coinValuePaise={balance?.coin_value_paise ?? 10}
-        loading={!balance}
+        loading={!mounted || !balance}
       />
 
       <div className={styles.summary}>
@@ -125,8 +127,9 @@ function Sparkline({ points }: { points: number[] }) {
           <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.02" />
         </linearGradient>
       </defs>
-      <path d={area} fill="url(#spark-fill)" />
+      <path className={styles.sparkArea} d={area} fill="url(#spark-fill)" />
       <path
+        className={styles.sparkLine}
         d={line}
         fill="none"
         stroke="var(--accent)"
@@ -134,6 +137,9 @@ function Sparkline({ points }: { points: number[] }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
+        // pathLength normalises the dash maths to 0–1 regardless of the real
+        // geometry, so the draw-on works without measuring the path.
+        pathLength={1}
       />
     </svg>
   );

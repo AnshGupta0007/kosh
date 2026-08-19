@@ -13,35 +13,24 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  color-scheme: dark;
-}
-
-[data-theme="light"] {
   color-scheme: light;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 body {
-  position: relative;
   min-height: 100dvh;
-  background: var(--bg-base);
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-/* Two pools of coloured light behind everything, fixed to the viewport.
-   Costs one element and no JavaScript, and it is the difference between
-   "dark theme" and a room with a light in it. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: var(--ambient-gold), var(--ambient-violet);
-  pointer-events: none;
+  /* Every figure in the app lines up in a column. */
+  font-variant-numeric: tabular-nums;
 }
 
 img,
@@ -80,13 +69,7 @@ ol {
 
 /* --------------------------------------------------------- global rules */
 
-/* Numbers must line up in columns. Every figure in the app is tabular. */
-body {
-  font-variant-numeric: tabular-nums;
-}
-
-/* One focus treatment for the whole app, keyboard-only. Anything that can
-   be focused gets this ring; no component re-invents it. */
+/* One focus treatment for the entire app, keyboard-only. */
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
@@ -94,11 +77,10 @@ body {
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: var(--text-primary);
+  background: var(--accent-quiet);
+  color: var(--text);
 }
 
-/* Scrollbars, themed. Left at default on Firefox rather than faked. */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -109,18 +91,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border: 2px solid transparent;
+  background: var(--rule-strong);
+  border: 3px solid transparent;
   border-radius: var(--radius-pill);
   background-clip: content-box;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ink-500);
-  background-clip: content-box;
-}
-
-/* Visually hidden but available to screen readers. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -132,30 +108,35 @@ body {
   border: 0;
 }
 
-/* Entrance motion.
-
-   Applied by adding data-reveal to a container: its direct children fade up
-   in sequence. One rule, no per-component animation code, and the stagger
-   is what makes a dashboard feel composed rather than dumped on screen. */
-[data-reveal] > * {
-  animation: reveal 520ms var(--ease-out) backwards;
+/* The eyebrow: small, spaced, uppercase. Used above every section title,
+   and it is most of what makes the layout read as editorial rather than
+   as an admin panel. */
+.eyebrow {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
 }
 
-[data-reveal] > *:nth-child(1) { animation-delay: 40ms; }
-[data-reveal] > *:nth-child(2) { animation-delay: 100ms; }
-[data-reveal] > *:nth-child(3) { animation-delay: 160ms; }
-[data-reveal] > *:nth-child(4) { animation-delay: 220ms; }
-[data-reveal] > *:nth-child(5) { animation-delay: 280ms; }
-[data-reveal] > *:nth-child(n + 6) { animation-delay: 340ms; }
+/* Entrance: one rule, staggered by position. */
+[data-reveal] > * {
+  animation: reveal 480ms var(--ease-out) backwards;
+}
+
+[data-reveal] > *:nth-child(1) { animation-delay: 30ms; }
+[data-reveal] > *:nth-child(2) { animation-delay: 90ms; }
+[data-reveal] > *:nth-child(3) { animation-delay: 150ms; }
+[data-reveal] > *:nth-child(4) { animation-delay: 210ms; }
+[data-reveal] > *:nth-child(n + 5) { animation-delay: 260ms; }
 
 @keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
 }
 
-/* Respect the user's motion preference everywhere, once. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

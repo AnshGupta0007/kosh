@@ -11,6 +11,7 @@ export { Button } from "./Button";
 export { Card, CardHeader } from "./Card";
 export { CoinAmount, CoinIcon } from "./Coin";
 export { Drawer } from "./Drawer";
+export { Icon, type IconName } from "./Icon";
 export { Input } from "./Input";
 export { Modal } from "./Modal";
 export { MultiSelect } from "./MultiSelect";

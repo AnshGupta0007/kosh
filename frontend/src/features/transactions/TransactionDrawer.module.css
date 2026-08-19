@@ -38,7 +38,7 @@
   flex-direction: column;
   gap: 0;
   margin: 0;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--rule);
 }
 
 .fact {
@@ -47,7 +47,7 @@
   align-items: baseline;
   justify-content: space-between;
   padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rule);
 }
 
 .factLabel {
@@ -110,9 +110,9 @@
   min-width: 16px;
   height: 16px;
   padding-inline: 4px;
-  background: var(--info-soft);
+  background: var(--accent-quiet);
   border-radius: var(--radius-pill);
-  color: var(--info);
+  color: var(--accent);
   font-size: var(--text-2xs);
 }
 
@@ -134,8 +134,8 @@
   gap: var(--space-3);
   align-items: flex-start;
   padding: var(--space-3);
-  background: var(--info-soft);
-  border: 1px solid color-mix(in srgb, var(--info) 20%, transparent);
+  background: var(--accent-quiet);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   line-height: var(--leading-snug);
@@ -146,7 +146,7 @@
   width: 5px;
   height: 5px;
   margin-top: 6px;
-  background: var(--info);
+  background: var(--accent);
   border-radius: 50%;
 }
 
@@ -156,7 +156,7 @@
   margin: 0;
   padding: var(--space-3);
   background: var(--bg-sunken);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-family: var(--font-mono);

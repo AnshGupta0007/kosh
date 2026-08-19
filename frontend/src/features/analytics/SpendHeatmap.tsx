@@ -124,6 +124,9 @@ export function SpendHeatmap({
                         data-level={cell.level}
                         tabIndex={index === focusIndex ? 0 : -1}
                         className={`${styles.cell} ${selected ? styles.selected : ""}`}
+                        // A sweep left-to-right across the year, one week per
+                        // 9ms. Capped so a wide range cannot stall the reveal.
+                        style={{ animationDelay: `${Math.min(weekIndex * 9, 520)}ms` }}
                         onMouseEnter={() => setHovered(cell)}
                         onFocus={() => {
                           setHovered(cell);
@@ -167,7 +170,7 @@ export function SpendHeatmap({
             </>
           ) : (
             <span className={styles.quiet}>
-              {formatNumber(flat.length)} days · hover a square, click to filter to that day
+              {formatNumber(flat.length)} days of spending
             </span>
           )}
         </p>

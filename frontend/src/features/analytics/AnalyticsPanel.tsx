@@ -11,7 +11,7 @@ import {
 import { type FilterState, toggleValue } from "@/lib/filters";
 import { useAnalytics } from "@/lib/hooks/useApi";
 
-import { CategoryDonut } from "./CategoryDonut";
+import { CategoryBars } from "./CategoryBars";
 import { SpendHeatmap } from "./SpendHeatmap";
 import { MonthlyTrend } from "./MonthlyTrend";
 import { TopMerchants } from "./TopMerchants";
@@ -97,7 +97,9 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <Stat
             label="Success rate"
             value={kpis ? formatPercent(kpis.success_rate) : "—"}
-            tone={kpis && kpis.success_rate < 90 ? "negative" : "positive"}
+            // Status colour only when it is genuinely bad. Painting an
+            // ordinary 88% red trains the reader to ignore red.
+            tone={kpis && kpis.success_rate < 80 ? "negative" : "default"}
             sub={
               kpis
                 ? `${formatNumber(kpis.failed_count)} failed · ${formatNumber(
@@ -111,7 +113,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
             label="Coins earned"
             value={kpis ? formatNumber(kpis.coins_earned) : "—"}
             tone="accent"
-            sub="1 coin per ₹100, capped at 100 per payment"
+            sub="1 coin per ₹100 spent"
             loading={isPending}
           />
         </div>
@@ -120,8 +122,8 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
       <Card as="section" aria-labelledby="heatmap-heading">
         <CardHeader
           id="heatmap-heading"
-          title="A year of spending, every day of it"
-          subtitle="One square per day, shaded by how much went out. Click any day to filter."
+          title="Your year, day by day"
+          subtitle="Darker means more spent. Pick a day to see it."
         />
         {data ? (
           <SpendHeatmap
@@ -140,14 +142,13 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <CardHeader
             id="category-heading"
             title="Where the money goes"
-            subtitle="Click a category to filter every view below"
+            subtitle="Tap one to filter everything below"
           />
           {data ? (
-            <CategoryDonut
+            <CategoryBars
               slices={data.by_category}
               selected={filters.categories}
               onToggle={toggleCategory}
-              totalPaise={data.kpis.total_spend_paise}
             />
           ) : (
             <div className={styles.chartSkeleton} />
@@ -158,7 +159,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <CardHeader
             id="trend-heading"
             title="Monthly trend"
-            subtitle="Calendar months in IST, quarantined rows excluded"
+            subtitle="How the year moved"
           />
           {data ? (
             <MonthlyTrend
@@ -177,7 +178,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <CardHeader
             id="merchants-heading"
             title="Top merchants"
-            subtitle="Click to search the table for that merchant"
+            subtitle="Who takes the most"
           />
           {data ? (
             <TopMerchants
@@ -194,7 +195,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <CardHeader
             id="methods-heading"
             title="How it was paid"
-            subtitle="Share of spend by payment method"
+            subtitle="How you paid for it"
           />
           {data ? (
             <ul className={styles.methods}>

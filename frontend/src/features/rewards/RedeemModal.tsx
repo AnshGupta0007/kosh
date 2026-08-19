@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { Button, CoinAmount, Modal, useToast } from "@/components/ui";
+import { Button, CoinAmount, Icon, type IconName, Modal, useToast } from "@/components/ui";
 import { formatNumber, formatRupeesWhole } from "@/lib/format";
 import { useRedeem } from "@/lib/hooks/useApi";
 import type { Balance, Reward } from "@/lib/types";
@@ -138,9 +138,7 @@ export function RedeemModal({ reward, balance, onClose }: RedeemModalProps) {
               />
             </svg>
           </div>
-          <p className={styles.successTitle}>
-            {reward.icon} {reward.title}
-          </p>
+          <p className={styles.successTitle}>{reward.title}</p>
           <p className={styles.successNote}>
             {done.replayed
               ? "This redemption had already gone through, so we returned the original voucher rather than charging you twice."
@@ -158,8 +156,8 @@ export function RedeemModal({ reward, balance, onClose }: RedeemModalProps) {
       ) : (
         <div className={styles.confirm}>
           <div className={styles.rewardRow}>
-            <span className={styles.icon} aria-hidden>
-              {reward.icon}
+            <span className={styles.icon}>
+              <Icon name={reward.icon as IconName} size={24} />
             </span>
             <div>
               <p className={styles.rewardTitle}>{reward.title}</p>

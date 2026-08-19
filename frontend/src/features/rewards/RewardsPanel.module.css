@@ -1,7 +1,7 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .balanceTag {
@@ -42,30 +42,23 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4);
+  padding: var(--space-5);
   overflow: hidden;
-  background: var(--surface-2);
-  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
-  box-shadow: var(--edge-highlight);
   transition:
     transform var(--duration-base) var(--ease-out),
     border-color var(--duration-base) var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out);
 }
 
-/* A wash of the reward's own colour, pooled at the top-left corner where
-   the icon sits. Gives six otherwise identical cards their own identity
-   without painting six loud backgrounds. */
+/* Deliberately empty. An earlier pass tinted each card with the reward's
+   own hue; in this system colour is reserved for data and status, so six
+   decorative pastel washes were exactly the thing the palette rules exist
+   to prevent. The cards differentiate by their icon and their words. */
 .wash {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    360px 200px at 0% 0%,
-    hsl(var(--reward-hue) 70% 55% / 14%),
-    transparent 70%
-  );
-  pointer-events: none;
+  display: none;
 }
 
 .card > *:not(.wash) {
@@ -76,7 +69,7 @@
 .available:hover {
   border-color: hsl(var(--reward-hue) 70% 55% / 45%);
   box-shadow:
-    var(--edge-highlight),
+    
     var(--shadow-lg),
     0 0 32px hsl(var(--reward-hue) 70% 55% / 18%);
   transform: translateY(-3px);
@@ -85,7 +78,7 @@
 /* Locked cards recede but stay fully legible — the goal is to be aspirational,
    not unreadable. */
 .locked {
-  background: var(--surface-1);
+  background: var(--surface);
 }
 
 .locked .icon {
@@ -104,11 +97,10 @@
   place-items: center;
   width: 46px;
   height: 46px;
-  background: hsl(var(--reward-hue) 60% 50% / 16%);
-  border: 1px solid hsl(var(--reward-hue) 60% 55% / 30%);
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
-  box-shadow: var(--edge-highlight);
-  font-size: 22px;
+  color: var(--accent);
 }
 
 .badges {
@@ -158,19 +150,19 @@
   flex-direction: column;
   gap: var(--space-2);
   padding-top: var(--space-3);
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--rule);
 }
 
 .progressTrack {
   height: 4px;
-  background: var(--surface-3);
+  background: var(--bg-sunken);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
 .progressFill {
   height: 100%;
-  background: var(--gradient-gold);
+  background: var(--coin-bright);
   border-radius: var(--radius-pill);
   box-shadow: 0 0 12px rgb(233 194 92 / 45%);
   transition: width var(--duration-slow) var(--ease-out);
@@ -193,7 +185,7 @@
   gap: var(--space-3);
   align-items: center;
   padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rule);
 }
 
 .historyRow:last-child {
@@ -204,11 +196,12 @@
 .historyIcon {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  background: var(--surface-3);
+  width: 34px;
+  height: 34px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
-  font-size: 16px;
+  color: var(--accent);
 }
 
 .historyMain {

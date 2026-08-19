@@ -16,11 +16,9 @@ export default function DataHealthPage() {
         <p className={styles.eyebrow}>Ingestion</p>
         <h1 className={styles.heading}>Data health</h1>
         <p className={styles.blurb}>
-          The supplied <code>transactions.json</code> is not clean — five different
-          timestamp encodings, amounts as strings, blank categories, reused ids and
-          one payment of ₹99,99,99,999. Rather than quietly patching it and moving
-          on, the loader records every repair it makes. This page reads that record
-          back out of the database.
+          The file behind this app arrived messy — five ways of writing a date,
+          amounts as text, blank categories, one payment of ₹99,99,99,999. We
+          repaired what we could and kept a record of all of it.
         </p>
       </header>
 

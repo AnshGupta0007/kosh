@@ -139,7 +139,7 @@ export function DataHealthPanel() {
         <CardHeader
           id="issues-heading"
           title="Everything we found"
-          subtitle="One row per class of problem, straight from the ingestion tables"
+          subtitle="What we found, and what we did about it"
         />
 
         <ul className={styles.issues}>

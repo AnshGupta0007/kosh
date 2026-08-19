@@ -22,8 +22,8 @@
   width: min(560px, 100%);
   max-height: min(60vh, 520px);
   overflow: hidden;
-  background: var(--surface-1);
-  border: 1px solid var(--border-default);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   animation: rise var(--duration-base) var(--ease-out);
@@ -34,7 +34,7 @@
   gap: var(--space-3);
   align-items: center;
   padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rule);
 }
 
 .searchIcon {
@@ -47,7 +47,7 @@
   min-width: 0;
   background: transparent;
   border: 0;
-  color: var(--text-primary);
+  color: var(--text);
   font-size: var(--text-md);
   outline: none;
 }
@@ -59,8 +59,8 @@
 .esc,
 .miniKbd {
   padding: 1px 5px;
-  background: var(--surface-3);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-xs);
   color: var(--text-tertiary);
   font-family: var(--font-sans);
@@ -93,14 +93,14 @@
   background: transparent;
   border: 0;
   border-radius: var(--radius-sm);
-  color: var(--text-primary);
+  color: var(--text);
   font-size: var(--text-sm);
   text-align: left;
   cursor: pointer;
 }
 
 .activeResult {
-  background: var(--accent-soft);
+  background: var(--accent-quiet);
   box-shadow: inset 2px 0 0 var(--accent);
 }
 
@@ -128,8 +128,8 @@
   gap: var(--space-4);
   align-items: center;
   padding: var(--space-2) var(--space-5);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--surface-2);
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
   color: var(--text-tertiary);
   font-size: var(--text-2xs);
 }

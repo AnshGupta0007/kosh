@@ -21,8 +21,8 @@
   max-height: calc(100dvh - var(--space-8));
   overflow-y: auto;
   padding: var(--space-6);
-  background: var(--surface-1);
-  border: 1px solid var(--border-default);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   animation: rise var(--duration-base) var(--ease-out);
@@ -65,8 +65,8 @@
 }
 
 .close:hover:not(:disabled) {
-  background: var(--surface-3);
-  color: var(--text-primary);
+  background: var(--bg-sunken);
+  color: var(--text);
 }
 
 .close:disabled {

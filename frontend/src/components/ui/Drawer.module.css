@@ -19,8 +19,8 @@
   display: flex;
   flex-direction: column;
   width: min(460px, 100%);
-  background: var(--surface-1);
-  border-left: 1px solid var(--border-default);
+  background: var(--surface);
+  border-left: 1px solid var(--rule);
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--duration-slow) var(--ease-out);
 }
@@ -31,7 +31,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: var(--space-5) var(--space-5) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rule);
 }
 
 .eyebrow {
@@ -63,8 +63,8 @@
 }
 
 .close:hover {
-  background: var(--surface-3);
-  color: var(--text-primary);
+  background: var(--bg-sunken);
+  color: var(--text);
 }
 
 .body {
@@ -75,8 +75,8 @@
 
 .footer {
   padding: var(--space-4) var(--space-5);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--surface-2);
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
 }
 
 /* On a phone, a right-hand drawer is unreachable. Become a bottom sheet. */
@@ -86,7 +86,7 @@
     width: 100%;
     max-height: 88dvh;
     border-left: 0;
-    border-top: 1px solid var(--border-default);
+    border-top: 1px solid var(--rule);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     animation: slide-up var(--duration-slow) var(--ease-out);
   }

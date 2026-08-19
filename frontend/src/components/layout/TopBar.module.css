@@ -2,9 +2,9 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: color-mix(in srgb, var(--bg-base) 72%, transparent);
-  backdrop-filter: blur(18px) saturate(150%);
-  border-bottom: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
 }
 
 .inner {
@@ -31,7 +31,7 @@
 }
 
 .wordmark {
-  color: var(--text-primary);
+  color: var(--text);
   font-family: var(--font-display);
   font-size: var(--text-xl);
   letter-spacing: var(--tracking-tight);
@@ -56,11 +56,11 @@
 
 .navLink:hover {
   background: var(--surface-hover);
-  color: var(--text-primary);
+  color: var(--text);
 }
 
 .navActive {
-  color: var(--text-primary);
+  color: var(--text);
 }
 
 /* The active marker sits under the label rather than behind it, so it reads
@@ -89,8 +89,8 @@
   align-items: center;
   height: 32px;
   padding-inline: var(--space-3);
-  background: var(--surface-2);
-  border: 1px solid var(--border-default);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
   color: var(--text-tertiary);
   font-size: var(--text-xs);
@@ -99,14 +99,14 @@
 }
 
 .command:hover {
-  border-color: var(--border-strong);
-  color: var(--text-primary);
+  border-color: var(--rule-strong);
+  color: var(--text);
 }
 
 .kbd {
   padding: 1px 5px;
-  background: var(--surface-3);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-xs);
   font-family: var(--font-sans);
   font-size: var(--text-2xs);
@@ -118,10 +118,9 @@
   align-items: flex-end;
   gap: 0;
   padding: var(--space-2) var(--space-3);
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--coin-quiet);
+  border: 1px solid color-mix(in srgb, var(--coin) 28%, transparent);
   border-radius: var(--radius-md);
-  box-shadow: var(--edge-highlight), var(--glow-gold);
   line-height: 1.15;
 }
 
@@ -135,8 +134,8 @@
   place-items: center;
   width: 32px;
   height: 32px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-default);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   cursor: pointer;
@@ -144,8 +143,8 @@
 }
 
 .themeToggle:hover {
-  border-color: var(--border-strong);
-  color: var(--text-primary);
+  border-color: var(--rule-strong);
+  color: var(--text);
 }
 
 /* --------------------------------------------------------- responsive */

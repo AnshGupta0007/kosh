@@ -35,8 +35,8 @@
   font-variant-numeric: tabular-nums;
   background: linear-gradient(
     170deg,
-    var(--text-primary) 30%,
-    color-mix(in srgb, var(--text-primary) 55%, transparent) 100%
+    var(--text) 30%,
+    color-mix(in srgb, var(--text) 55%, transparent) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -86,5 +86,29 @@
     grid-template-columns: 1fr;
     gap: var(--space-6);
     padding-top: var(--space-2);
+  }
+}
+
+/* The line draws itself across the year, then the fill arrives under it. */
+.sparkLine {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1100ms var(--ease-out) 180ms forwards;
+}
+
+.sparkArea {
+  opacity: 0;
+  animation: fadeIn 700ms var(--ease-out) 700ms forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
 }

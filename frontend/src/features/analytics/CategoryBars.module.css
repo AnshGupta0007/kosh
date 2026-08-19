@@ -1,0 +1,143 @@
+/* Ranked bars, one hue. Length carries magnitude; colour carries nothing,
+   which is the point. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(88px, 132px) minmax(0, 1fr) 74px 52px 96px;
+  gap: var(--space-4);
+  align-items: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.list li:last-child .row {
+  border-bottom: 0;
+}
+
+.row:hover {
+  background: var(--surface-hover);
+}
+
+.name {
+  overflow: hidden;
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  height: 10px;
+  background: var(--bg-sunken);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  background: var(--chart-mark);
+  /* 4px rounded data-end, anchored flat against the baseline. */
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  transition: width var(--duration-slow) var(--ease-out);
+  /* Grow out of the axis on first paint. scaleX rather than width so it is
+     composited, and the rounded end does not distort on the way. */
+  transform-origin: left center;
+  animation: grow 620ms var(--ease-out) backwards;
+}
+
+.list li:nth-child(1) .fill { animation-delay: 30ms; }
+.list li:nth-child(2) .fill { animation-delay: 70ms; }
+.list li:nth-child(3) .fill { animation-delay: 110ms; }
+.list li:nth-child(4) .fill { animation-delay: 150ms; }
+.list li:nth-child(5) .fill { animation-delay: 190ms; }
+.list li:nth-child(6) .fill { animation-delay: 230ms; }
+.list li:nth-child(7) .fill { animation-delay: 270ms; }
+.list li:nth-child(8) .fill { animation-delay: 310ms; }
+.list li:nth-child(9) .fill { animation-delay: 350ms; }
+.list li:nth-child(n + 10) .fill { animation-delay: 390ms; }
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.share,
+.count {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.count {
+  text-align: right;
+}
+
+.countUnit {
+  color: var(--text-tertiary);
+}
+
+/* Selected row keeps full strength; the rest recede but stay readable. */
+.active {
+  background: var(--accent-quiet);
+}
+
+.active .name {
+  color: var(--accent-text);
+  font-weight: var(--weight-semibold);
+}
+
+.dimmed .fill {
+  background: var(--chart-mark-quiet);
+}
+
+.dimmed .name,
+.dimmed .value {
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 860px) {
+  .row {
+    grid-template-columns: minmax(76px, 110px) minmax(0, 1fr) 68px 46px;
+  }
+
+  .count {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: minmax(72px, 1fr) 68px 46px;
+    gap: var(--space-3);
+  }
+
+  .track {
+    display: none;
+  }
+}

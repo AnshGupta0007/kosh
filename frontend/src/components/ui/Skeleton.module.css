@@ -3,9 +3,9 @@
   background:
     linear-gradient(
       90deg,
-      var(--surface-2) 0%,
-      var(--surface-3) 40%,
-      var(--surface-2) 80%
+      var(--surface) 0%,
+      var(--bg-sunken) 40%,
+      var(--surface) 80%
     );
   background-size: 300% 100%;
   border-radius: var(--radius-sm);

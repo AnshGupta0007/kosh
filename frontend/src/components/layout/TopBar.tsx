@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { CoinAmount, Skeleton } from "@/components/ui";
 import { formatNumber, formatRupeesWhole } from "@/lib/format";
 import { useBalance } from "@/lib/hooks/useApi";
+import { useMounted } from "@/lib/hooks/useMounted";
 import { useTheme } from "@/lib/hooks/useTheme";
 
 import styles from "./TopBar.module.css";
@@ -32,6 +33,7 @@ export function TopBar({ onOpenCommandPalette }: TopBarProps) {
   const pathname = usePathname();
   const { data: balance, isPending } = useBalance();
   const { theme, toggle } = useTheme();
+  const mounted = useMounted();
 
   return (
     <header className={styles.bar}>
@@ -78,7 +80,7 @@ export function TopBar({ onOpenCommandPalette }: TopBarProps) {
           </button>
 
           <div className={styles.balance} title="Your coin balance">
-            {isPending || !balance ? (
+            {!mounted || isPending || !balance ? (
               <Skeleton width="88px" height="18px" />
             ) : (
               <>

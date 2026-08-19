@@ -1,0 +1,6 @@
+.icon {
+  flex-shrink: 0;
+  /* Optical alignment: a 24px icon next to 15px text sits a touch high
+     without this. */
+  vertical-align: -0.125em;
+}

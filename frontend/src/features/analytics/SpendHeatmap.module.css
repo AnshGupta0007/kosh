@@ -96,11 +96,19 @@
   transition:
     transform var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
+  animation: cellIn 420ms var(--ease-out) backwards;
+}
+
+@keyframes cellIn {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
 }
 
 .cell:hover {
   transform: scale(1.35);
-  box-shadow: 0 0 0 1px var(--text-primary);
+  box-shadow: 0 0 0 1px var(--text);
 }
 
 .cell:focus-visible {
@@ -114,71 +122,76 @@
   transform: scale(1.2);
 }
 
-/* ---- the ramp: one hue, monotonic lightness, dark-anchored ----------
+/* ---- the ramp -------------------------------------------------------
 
-   Scoped to .cell/.legendCell because CSS Modules requires every selector
-   to carry a local class — a bare [data-level] selector is not "pure". */
+   Sequential: ONE hue, stepped monotonically by lightness. Green, because
+   this encodes spend — gold is reserved for coins and would imply the wrong
+   quantity here. Light mode runs pale→deep; dark mode flips the anchor so
+   quiet days sink into the surface and heavy days come forward.
+
+   Scoped to .cell/.legendCell because CSS Modules rejects a selector with
+   no local class. */
 
 .cell[data-level="0"],
 .legendCell[data-level="0"] {
-  background: rgb(255 255 255 / 5%);
+  background: var(--bg-sunken);
 }
 
 .cell[data-level="1"],
 .legendCell[data-level="1"] {
-  background: #4a3714;
+  background: #dcf0e6;
 }
 
 .cell[data-level="2"],
 .legendCell[data-level="2"] {
-  background: var(--gold-700);
+  background: #a9dcc4;
 }
 
 .cell[data-level="3"],
 .legendCell[data-level="3"] {
-  background: var(--gold-600);
+  background: #5cbf95;
 }
 
 .cell[data-level="4"],
 .legendCell[data-level="4"] {
-  background: var(--gold-500);
+  background: var(--green-500);
 }
 
 .cell[data-level="5"],
 .legendCell[data-level="5"] {
-  background: var(--gold-300);
+  background: var(--green-700);
 }
 
-/* Light mode runs the conventional pale->deep direction. */
+/* Dark: anchor flipped. */
 
-:global([data-theme="light"]) .cell[data-level="0"],
-:global([data-theme="light"]) .legendCell[data-level="0"] {
-  background: rgb(14 16 24 / 6%);
+:global([data-theme="dark"]) .cell[data-level="0"],
+:global([data-theme="dark"]) .legendCell[data-level="0"] {
+  background: rgb(255 255 255 / 5%);
 }
 
-:global([data-theme="light"]) .cell[data-level="1"],
-:global([data-theme="light"]) .legendCell[data-level="1"] {
-  background: var(--gold-100);
+:global([data-theme="dark"]) .cell[data-level="1"],
+:global([data-theme="dark"]) .legendCell[data-level="1"] {
+  background: #123626;
 }
 
-:global([data-theme="light"]) .cell[data-level="2"],
-:global([data-theme="light"]) .legendCell[data-level="2"] {
-  background: var(--gold-300);
+:global([data-theme="dark"]) .cell[data-level="2"],
+:global([data-theme="dark"]) .legendCell[data-level="2"] {
+  background: #17573c;
 }
 
-:global([data-theme="light"]) .cell[data-level="3"],
-:global([data-theme="light"]) .legendCell[data-level="3"] {
-  background: var(--gold-500);
+:global([data-theme="dark"]) .cell[data-level="3"],
+:global([data-theme="dark"]) .legendCell[data-level="3"] {
+  background: #1b7a52;
 }
 
-:global([data-theme="light"]) .cell[data-level="4"],
-:global([data-theme="light"]) .legendCell[data-level="4"] {
-  background: var(--gold-600);
+:global([data-theme="dark"]) .cell[data-level="4"],
+:global([data-theme="dark"]) .legendCell[data-level="4"] {
+  background: var(--green-400);
 }
 
-:global([data-theme="light"]) .cell[data-level="5"],
-:global([data-theme="light"]) .legendCell[data-level="5"] {
-  background: var(--gold-700);
+:global([data-theme="dark"]) .cell[data-level="5"],
+:global([data-theme="dark"]) .legendCell[data-level="5"] {
+  background: var(--green-300);
 }
 
 /* -------------------------------------------------------- legend row */

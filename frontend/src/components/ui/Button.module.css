@@ -58,27 +58,27 @@
 
 /* ---------------------------------------------------------- variants */
 .primary {
-  background: var(--gradient-gold);
-  color: var(--on-accent);
-  border-color: var(--gold-600);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
   font-weight: var(--weight-semibold);
   box-shadow: var(--shadow-sm);
 }
 
 .primary:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: var(--edge-highlight), var(--glow-gold);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .secondary {
-  background: var(--surface-2);
-  color: var(--text-primary);
-  border-color: var(--border-default);
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--rule);
 }
 
 .secondary:hover:not(:disabled) {
   background: var(--surface-hover);
-  border-color: var(--border-strong);
+  border-color: var(--rule-strong);
 }
 
 .ghost {
@@ -87,11 +87,11 @@
 
 .ghost:hover:not(:disabled) {
   background: var(--surface-hover);
-  color: var(--text-primary);
+  color: var(--text);
 }
 
 .danger {
-  background: var(--negative-soft);
+  background: var(--negative-quiet);
   color: var(--negative);
   border-color: color-mix(in srgb, var(--negative) 35%, transparent);
 }
