@@ -136,6 +136,42 @@ def by_month(session: Session, *, user_id: int, filters: TransactionFilters) -> 
     ]
 
 
+DAY_EXPR = "(t.occurred_at AT TIME ZONE 'Asia/Kolkata')::date"
+
+
+def by_day(session: Session, *, user_id: int, filters: TransactionFilters) -> list[dict]:
+    """Daily spend totals, one row per day that has any activity.
+
+    Days with no payments are simply absent; the client fills the calendar
+    grid, which keeps the response to ~380 rows instead of a dense series.
+    """
+    where, params = _params(session, filters, user_id)
+    rows = session.execute(
+        text(
+            f"""
+            SELECT
+                to_char({DAY_EXPR}, 'YYYY-MM-DD') AS day,
+                coalesce(sum(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0) AS total,
+                count(*) AS txns
+            {BASE_FROM}
+            WHERE {where}
+            GROUP BY {DAY_EXPR}
+            ORDER BY {DAY_EXPR}
+            """
+        ),
+        params,
+    ).mappings().all()
+
+    return [
+        {
+            "date": r["day"],
+            "total_paise": int(r["total"]),
+            "transaction_count": int(r["txns"]),
+        }
+        for r in rows
+    ]
+
+
 def _named_breakdown(session: Session, where: str, params: dict, column: str, limit: int | None):
     limit_sql = f"LIMIT {int(limit)}" if limit else ""
     rows = session.execute(

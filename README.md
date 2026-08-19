@@ -19,7 +19,9 @@ Next.js 15 · TypeScript · FastAPI · PostgreSQL 18
 
 ## What it does
 
-**Overview** — five KPIs, a category donut, a monthly trend, a top-merchant ranking and a payment-method split, sitting above the full 10,000-row transactions table. Filter by category, status, method, date range, amount range and type; search merchants as you type; sort by date, amount, merchant or coins. Click any row for full detail including the untouched source record.
+**Overview** — a spend calendar covering every one of the 380 days in the dataset, plus five KPIs, a category donut, a monthly trend, a top-merchant ranking and a payment-method split, sitting above the full 10,000-row transactions table.
+
+The calendar is the one view where the whole dataset is on screen at once. It is a sequential encoding done properly — a single hue stepped by lightness, anchor flipped for dark mode, levels set by quintiles of active days rather than a linear slice of the max, so one ₹9.2L outlier does not flatten the other 379 days into the bottom bucket. It behaves as a brush: it always shows the full date domain even while a day is selected, so clicking a square narrows the rest of the page without collapsing the control you clicked in. Keyboard users get one tab stop and arrow-key navigation rather than 380 tab stops. Filter by category, status, method, date range, amount range and type; search merchants as you type; sort by date, amount, merchant or coins. Click any row for full detail including the untouched source record.
 
 **Cross-filtering works in both directions.** Clicking a donut slice, a month bar or a merchant filters the table. Filtering the table reshapes every chart. Neither component knows the other exists — they both read the same filter state out of the URL.
 
@@ -154,7 +156,7 @@ All ten endpoints take the same filter parameters where it makes sense, which is
 - [x] Sort by date, amount, merchant and coins
 - [x] Row detail in a drawer, including the raw source record
 - [x] **Server-side** pagination, filtering and sorting
-- [x] Spend by category **and** monthly trend, plus merchant and method breakdowns
+- [x] Spend by category **and** monthly trend, plus a daily spend calendar, merchant and method breakdowns
 - [x] **Two-way** cross-filtering between charts and table
 - [x] Coin balance visible on every screen
 - [x] Six rewards, select → confirm → done, with optimistic update and rollback

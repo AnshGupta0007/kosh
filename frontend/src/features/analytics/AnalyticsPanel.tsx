@@ -12,6 +12,7 @@ import { type FilterState, toggleValue } from "@/lib/filters";
 import { useAnalytics } from "@/lib/hooks/useApi";
 
 import { CategoryDonut } from "./CategoryDonut";
+import { SpendHeatmap } from "./SpendHeatmap";
 import { MonthlyTrend } from "./MonthlyTrend";
 import { TopMerchants } from "./TopMerchants";
 import styles from "./AnalyticsPanel.module.css";
@@ -42,6 +43,11 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
 
   const setMerchant = (merchant: string) =>
     onApply((state) => ({ ...state, search: merchant }));
+
+  // Clicking a day narrows to exactly that calendar day; clicking it again
+  // clears the range rather than leaving the user stuck on one square.
+  const selectDay = (date: string) =>
+    onApply((state) => ({ ...state, dateFrom: date, dateTo: date }));
 
   if (isError) {
     return (
@@ -109,6 +115,24 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
             loading={isPending}
           />
         </div>
+      </Card>
+
+      <Card as="section" aria-labelledby="heatmap-heading">
+        <CardHeader
+          id="heatmap-heading"
+          title="A year of spending, every day of it"
+          subtitle="One square per day, shaded by how much went out. Click any day to filter."
+        />
+        {data ? (
+          <SpendHeatmap
+            days={data.by_day}
+            selectedFrom={filters.dateFrom}
+            selectedTo={filters.dateTo}
+            onSelectDay={selectDay}
+          />
+        ) : (
+          <div className={styles.chartSkeleton} />
+        )}
       </Card>
 
       <div className={styles.chartGrid}>

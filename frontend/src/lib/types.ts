@@ -82,6 +82,12 @@ export interface MonthPoint {
   coins_earned: number;
 }
 
+export interface DayPoint {
+  date: string; // YYYY-MM-DD, IST calendar day
+  total_paise: number;
+  transaction_count: number;
+}
+
 export interface NamedSlice {
   name: string;
   total_paise: number;
@@ -106,6 +112,7 @@ export interface Analytics {
   kpis: Kpis;
   by_category: CategorySlice[];
   by_month: MonthPoint[];
+  by_day: DayPoint[];
   by_method: NamedSlice[];
   top_merchants: NamedSlice[];
   query_ms: number;

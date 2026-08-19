@@ -21,6 +21,14 @@ class MonthPoint(BaseModel):
     coins_earned: int
 
 
+class DayPoint(BaseModel):
+    """One calendar day in IST. Drives the spend heatmap."""
+
+    date: str  # YYYY-MM-DD
+    total_paise: int
+    transaction_count: int
+
+
 class NamedSlice(BaseModel):
     name: str
     total_paise: int
@@ -45,6 +53,7 @@ class AnalyticsOut(BaseModel):
     kpis: Kpis
     by_category: list[CategorySlice]
     by_month: list[MonthPoint]
+    by_day: list[DayPoint]
     by_method: list[NamedSlice]
     top_merchants: list[NamedSlice]
     query_ms: int
