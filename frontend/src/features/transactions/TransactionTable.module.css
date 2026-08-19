@@ -51,6 +51,18 @@
 }
 
 .scroll {
+  /* position:relative is load-bearing, not decoration.
+
+     The visually-hidden caption and the per-row screen-reader spans use
+     .sr-only, which is position:absolute. A scroll container only clips
+     descendants whose containing-block chain runs through it — with this
+     element static, those absolute children resolved their containing block
+     to .wrapper *above* the scroller, escaped its clipping, and propagated
+     the full 3,200px table height as scrollable overflow all the way to the
+     document. The page then scrolled ~2,500px past its own footer.
+
+     Making the scroller a containing block keeps them inside it. */
+  position: relative;
   max-height: min(62vh, 720px);
   overflow: auto;
   overscroll-behavior: contain;

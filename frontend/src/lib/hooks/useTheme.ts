@@ -36,13 +36,18 @@ export function useTheme() {
   return { theme, toggle };
 }
 
-/** Runs before paint; kept as a string so it can be inlined in <head>. */
+/** Runs before paint; kept as a string so it can be inlined in <head>.
+ *
+ * Dark is the product's default, not the operating system's preference.
+ * Kosh is designed dark-first — the card, the gold and the ambient light all
+ * assume it — so a visitor on a light-mode machine should still see the app
+ * as intended. A stored choice always wins; the OS is not consulted.
+ */
 export const themeScript = `
 (function () {
   try {
     var stored = localStorage.getItem("${STORAGE_KEY}");
-    var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-    document.documentElement.dataset.theme = stored || (prefersLight ? "light" : "dark");
+    document.documentElement.dataset.theme = stored === "light" ? "light" : "dark";
   } catch (e) {
     document.documentElement.dataset.theme = "dark";
   }

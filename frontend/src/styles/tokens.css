@@ -66,9 +66,9 @@
   --surface-hover: var(--ink-750);
   --surface-active: var(--ink-700);
 
-  --border-subtle: rgb(255 255 255 / 6%);
-  --border-default: rgb(255 255 255 / 10%);
-  --border-strong: rgb(255 255 255 / 18%);
+  --border-subtle: rgb(255 255 255 / 9%);
+  --border-default: rgb(255 255 255 / 13%);
+  --border-strong: rgb(255 255 255 / 22%);
 
   --text-primary: var(--ink-050);
   --text-secondary: var(--ink-300);
@@ -103,8 +103,9 @@
      the chart fills are provably the same gold. */
   --gradient-gold: linear-gradient(135deg, #f7dfa0 0%, #e9c25c 38%, #c08a24 100%);
   --gradient-gold-soft: linear-gradient(180deg, var(--gold-400), var(--gold-600));
-  --gradient-card:
-    linear-gradient(145deg, #2a2340 0%, #171426 45%, #0e0c17 100%);
+  /* The final stop stays clearly above the page background (#07060d): a card
+     whose darkest corner matches the page behind it has no corner. */
+  --gradient-card: linear-gradient(145deg, #2f2747 0%, #1b1730 45%, #151124 100%);
   --gradient-sheen:
     linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 14%) 45%, transparent 60%);
 
