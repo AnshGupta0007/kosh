@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import UTC, date, datetime, time, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
@@ -92,7 +92,7 @@ def parse_timestamp(raw: Any, flags: list[str]) -> datetime:
         flags.append(FLAG_TIMESTAMP_EPOCH)
         value = int(text)
         seconds = value / 1000 if len(text) > 10 else value
-        return datetime.fromtimestamp(seconds, tz=timezone.utc)
+        return datetime.fromtimestamp(seconds, tz=UTC)
 
     if match := _DMY_RE.match(text):
         # Day-first, not month-first: the file contains values like
@@ -100,7 +100,7 @@ def parse_timestamp(raw: Any, flags: list[str]) -> datetime:
         flags.append(FLAG_TIMESTAMP_DMY)
         day, month, year, hour, minute, second = (int(g) for g in match.groups())
         local = datetime(year, month, day, hour, minute, second, tzinfo=IST)
-        return local.astimezone(timezone.utc)
+        return local.astimezone(UTC)
 
     if match := _DATE_ONLY_RE.match(text):
         # No clock time in the source. Anchored to IST midnight, which keeps
@@ -108,7 +108,7 @@ def parse_timestamp(raw: Any, flags: list[str]) -> datetime:
         flags.append(FLAG_TIMESTAMP_DATE_ONLY)
         year, month, day = (int(g) for g in match.groups())
         local = datetime.combine(date(year, month, day), time.min, tzinfo=IST)
-        return local.astimezone(timezone.utc)
+        return local.astimezone(UTC)
 
     normalised = text.replace("Z", "+00:00")
     try:
@@ -121,7 +121,7 @@ def parse_timestamp(raw: Any, flags: list[str]) -> datetime:
         flags.append(FLAG_TIMESTAMP_DATE_ONLY)
     elif parsed.utcoffset() != timedelta(0):
         flags.append(FLAG_TIMESTAMP_OFFSET)
-    return parsed.astimezone(timezone.utc)
+    return parsed.astimezone(UTC)
 
 
 # -------------------------------------------------------------- money
@@ -187,7 +187,8 @@ def build_merchant_category_map(rows: list[dict[str, Any]]) -> dict[str, str]:
     tally: dict[str, dict[str, int]] = {}
     for row in rows:
         merchant = (row.get("merchant") or "").strip()
-        category = (row.get("category") or "").strip() if isinstance(row.get("category"), str) else ""
+        raw_category = row.get("category")
+        category = raw_category.strip() if isinstance(raw_category, str) else ""
         if not merchant or not category:
             continue
         tally.setdefault(merchant, {})
