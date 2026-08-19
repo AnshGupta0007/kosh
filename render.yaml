@@ -1,0 +1,30 @@
+# Render blueprint: API + managed PostgreSQL.
+#
+# After the first deploy, seed the hosted database once from the service
+# shell:  python -m app.seed.run --file /app/data/transactions.json
+#
+# The frontend goes to Vercel separately (it is a Next.js app, and Vercel's
+# free tier serves it better than a Render web service would).
+services:
+  - type: web
+    name: kosh-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kosh-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        sync: false # set to your Vercel URL after the frontend deploys
+      - key: PYTHON_VERSION
+        value: "3.12"
+
+databases:
+  - name: kosh-db
+    plan: free
+    postgresMajorVersion: "16" # Render's newest free tier; 18 locally

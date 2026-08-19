@@ -2,6 +2,7 @@
 
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,6 +25,22 @@ class Settings(BaseSettings):
     quarantine_amount_paise: int = 10_000_000_00  # ₹1 crore
 
     max_page_size: int = 200
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_psycopg_driver(cls, value: str) -> str:
+        """Normalise the URL hosted Postgres providers hand out.
+
+        Render, Railway, Heroku and Neon all export `postgres://…` or
+        `postgresql://…`. SQLAlchemy reads the scheme as the driver name, so
+        without this the app boots fine locally and dies on deploy with
+        "Can't load plugin: sqlalchemy.dialects:postgres".
+        """
+        if value.startswith("postgres://"):
+            return value.replace("postgres://", "postgresql+psycopg://", 1)
+        if value.startswith("postgresql://"):
+            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+        return value
 
     @property
     def cors_origin_list(self) -> list[str]:
