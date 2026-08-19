@@ -1,0 +1,32 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-height: 60vh;
+}
+
+.intro {
+  max-width: 68ch;
+}
+
+.eyebrow {
+  color: var(--accent-text);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+.heading {
+  margin-top: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+.blurb {
+  margin-top: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}

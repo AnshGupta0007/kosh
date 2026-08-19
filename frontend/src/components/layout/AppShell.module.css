@@ -1,0 +1,67 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* Hidden until focused: the first Tab on the page reveals it. */
+.skipLink {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-toast);
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  color: var(--on-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  transform: translateY(-200%);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: var(--content-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.footerHint kbd {
+  padding: 1px 5px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+}
+
+@media (max-width: 700px) {
+  .main {
+    padding: var(--space-4);
+  }
+
+  .footer {
+    padding: var(--space-4);
+  }
+}
