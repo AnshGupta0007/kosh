@@ -10,10 +10,21 @@ Next.js 15 · TypeScript · FastAPI · PostgreSQL 18
 
 | | |
 |---|---|
-| **Web** | _add after deploy_ |
-| **API** | _add after deploy_ |
-| **API docs** | `/docs` on the API host |
-| **Walkthrough video** | _add link_ |
+| **Web** | **https://kosh-umber.vercel.app** |
+| **API** | **https://kosh-api-ps80.onrender.com** |
+| **API docs** | https://kosh-api-ps80.onrender.com/docs |
+| **Health** | https://kosh-api-ps80.onrender.com/api/health |
+
+Vercel · Render · Neon Postgres.
+
+> **The API sleeps.** Render's free tier spins a service down after ~15 minutes
+> idle, so the **first request can take 30–60 seconds** while it wakes. The
+> frontend retries, so the page fills in on its own — it is not broken, just
+> cold. Loading the health link above first is the quickest way to wake it.
+
+> **Hosted Postgres is 17, local is 18.** Neon's current default is PostgreSQL 17,
+> which the brief allows ("16 or newer is fine if your host doesn't offer 18
+> yet"). `docker compose` runs 18.6 locally, and the schema is identical on both.
 
 ---
 
@@ -177,6 +188,7 @@ All ten endpoints take the same filter parameters where it makes sense, which is
 - [x] A spend calendar over all 380 days — the one view where the whole dataset is on screen
 - [x] Hand-drawn SVG icon set (no emoji anywhere)
 - [x] Chart colours validated against a colour formula, not chosen by eye
+- [x] Deployed: Vercel + Render + Neon, verified end to end in production
 - [x] 36 backend tests, including six on the redeem endpoint
 - [x] Accessibility: semantic table, `aria-sort`, keyboard-operable rows and charts, skip link, live-region toasts, reduced-motion support
 - [x] ⌘K command palette
@@ -184,7 +196,6 @@ All ten endpoints take the same filter parameters where it makes sense, which is
 
 ### Not done
 
-- **Not deployed at the time of writing.** Everything is deploy-ready — `backend/Dockerfile`, `render.yaml`, `frontend/vercel.json` and a `DATABASE_URL` normaliser for hosted providers — but the live URLs are not filled in above yet.
 - **No authentication.** Single seeded demo user. Every query is still scoped by `user_id`, so adding auth means changing one dependency function.
 - **No frontend tests.** The backend is covered; the UI was verified by hand across widths and themes. If I had another hour it would go on the filter reducer and the optimistic-rollback path.
 - **Virtualisation.** Server-side pagination made it unnecessary; see `DECISIONS.md`.
@@ -194,7 +205,9 @@ All ten endpoints take the same filter parameters where it makes sense, which is
 
 - Recharts renders the donut and the bars into SVG that does not resize until the next animation frame, so a fast window resize can leave a chart briefly mis-sized. It corrects itself.
 - `useFilterOptions` caches with `staleTime: Infinity`. Re-seeding while the app is open needs a refresh to pick up new categories.
-- The success-rate KPI turns red below 90%. The supplied data sits at 88%, so it is red by default — that is the data, not a bug.
+- **Cold starts.** Render's free tier sleeps after ~15 minutes idle; the first request takes 30–60 seconds. Everything after that is fast.
+- **Cross-region latency.** The API runs in Render's US region and Neon sits in Singapore, so a query that takes 8–40 ms locally takes ~350 ms in production. It is the network, not the query: the same SQL against local Postgres 18 is unchanged. Co-locating both in one region would fix it, and I would do that with a paid tier.
+- No walkthrough video — the app is deployed, and the brief makes the video optional in that case.
 
 ---
 
