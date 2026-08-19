@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
-import { Button, Input, MultiSelect, SegmentedControl } from "@/components/ui";
+import { Button, Icon, Input, MultiSelect, SegmentedControl } from "@/components/ui";
 import { humanizeMethod } from "@/lib/format";
-import type { FilterState } from "@/lib/filters";
+import { activeChips, type FilterState } from "@/lib/filters";
 import { useDebounced } from "@/lib/hooks/useDebounced";
 import type { FilterOptions, PaymentMethod, TransactionStatus } from "@/lib/types";
 
@@ -29,6 +29,13 @@ interface FilterBarProps {
 export function FilterBar({ filters, options, onChange, onReset, hasFilters }: FilterBarProps) {
   const [searchDraft, setSearchDraft] = useState(filters.search);
   const debouncedSearch = useDebounced(searchDraft, 250);
+  // Below 700px the seven controls filled the whole screen before a single
+  // row of data was visible, so everything except search collapses behind a
+  // toggle. On desktop the panel is `display: contents`, so the layout is
+  // exactly as if this wrapper did not exist.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const panelId = useId();
+  const activeCount = activeChips(filters).filter((chip) => chip.key !== "search").length;
 
   // Push the settled value up.
   useEffect(() => {
@@ -63,8 +70,24 @@ export function FilterBar({ filters, options, onChange, onReset, hasFilters }: F
         />
       </div>
 
-      <MultiSelect
-        label="Category"
+      <button
+        type="button"
+        className={styles.toggle}
+        onClick={() => setFiltersOpen((open) => !open)}
+        aria-expanded={filtersOpen}
+        aria-controls={panelId}
+      >
+        <Icon name="chevron-down" size={16} className={filtersOpen ? styles.toggleOpen : ""} />
+        {filtersOpen ? "Hide filters" : "Filters"}
+        {activeCount > 0 ? <span className={styles.toggleCount}>{activeCount}</span> : null}
+      </button>
+
+      <div
+        id={panelId}
+        className={`${styles.advanced} ${filtersOpen ? styles.advancedOpen : ""}`}
+      >
+        <MultiSelect
+          label="Category"
         options={options?.categories ?? []}
         selected={filters.categories}
         onChange={(categories) => onChange({ categories })}
@@ -138,13 +161,14 @@ export function FilterBar({ filters, options, onChange, onReset, hasFilters }: F
         />
       </div>
 
-      {hasFilters ? (
-        <div className={styles.resetCell}>
-          <Button variant="ghost" size="sm" onClick={onReset}>
-            Reset all
-          </Button>
-        </div>
-      ) : null}
+        {hasFilters ? (
+          <div className={styles.resetCell}>
+            <Button variant="ghost" size="sm" onClick={onReset}>
+              Reset all
+            </Button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

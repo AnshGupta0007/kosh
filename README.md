@@ -165,7 +165,10 @@ All ten endpoints take the same filter parameters where it makes sense, which is
 - [x] PostgreSQL 18, real schema, one-command seed
 - [x] Hand-built modal and drawer: focus trap, Escape, focus restore
 - [x] Light and dark themes, no flash on load
-- [x] Responsive to 360px — the table becomes cards, same markup
+- [x] Responsive to 360px — the table becomes cards from the same markup, and the filter bar collapses behind a toggle so data is visible on a phone rather than seven controls
+- [x] A spend calendar over all 380 days — the one view where the whole dataset is on screen
+- [x] Hand-drawn SVG icon set (no emoji anywhere)
+- [x] Chart colours validated against a colour formula, not chosen by eye
 - [x] 36 backend tests, including six on the redeem endpoint
 - [x] Accessibility: semantic table, `aria-sort`, keyboard-operable rows and charts, skip link, live-region toasts, reduced-motion support
 - [x] ⌘K command palette

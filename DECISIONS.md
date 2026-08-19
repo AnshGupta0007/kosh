@@ -97,6 +97,19 @@ The brief requires the table to be hand-built and says it is where the CSS is ju
 
 ---
 
+## 7a. Charts follow a colour formula, not taste
+
+Every chart colour in the app was run through a validator (lightness band, chroma floor, colourblind separation, contrast against the surface) rather than picked by eye. Two things changed as a result:
+
+- The first status trio put amber and red at ΔE 11.9 for **normal** vision — two colours a fully-sighted reader cannot reliably tell apart. Re-stepped to pass.
+- The dark-mode chart green is chosen against the dark surface, not flipped from the light one. A palette that is correct on white is usually too light on black.
+
+**The ten-category donut became ranked bars.** Three reasons, in order of weight: a categorical palette tops out around eight distinguishable hues, so ten wedges cannot be coloured honestly; these categories are *nominal* and what is compared is magnitude, so colouring each one spends the identity channel re-encoding what bar length already says; and people read length far more accurately than angle. One hue for every bar is both the correct answer and the calmer one.
+
+The spend calendar is a **sequential** encoding and follows that rule instead: a single hue stepped by lightness, anchor flipped for dark mode, with levels drawn from quintiles of the active days so one ₹9.2L outlier does not flatten the other 379 into the bottom bucket.
+
+---
+
 ## 7b. The visual language, and why the card exists
 
 The first version of this UI was competent and completely forgettable — near-black surfaces, grey cards, an accent colour that barely appeared. It looked like every dashboard template, which for a frontend-focused role is the wrong thing to hand in.
@@ -111,7 +124,7 @@ Four changes fixed it, and each one is a rule rather than a decoration:
 
 **Surfaces are lit, not filled.** Every card carries `--edge-highlight`: a 1px inset highlight on its top edge. It is the difference between a surface catching the light and a rectangle of colour, and it costs one token.
 
-The typography follows the same discipline — Instrument Serif is reserved for figures that carry the story (the headline spend, KPI values, a transaction amount) and Inter with tabular figures runs everything else. One number on the Overview page is deliberately far larger than anything else, because if a reader takes one figure away it should be that one.
+**Typography went through one full reversal.** The first version set every figure in a display serif. It read as a newspaper rather than a money product — no modern payments app sets numbers in a serif, and next to it the whole interface looked dated. Plus Jakarta Sans now carries both jobs: the interface at 400–600, and figures at 700–800 with tight tracking, which is what makes a number read as *a number you should care about* rather than as decorative text. One figure on the Overview page is deliberately far larger than anything else, because if a reader takes one number away it should be that one.
 
 ---
 

@@ -16,7 +16,7 @@
 
 ---
 
-## Four things I threw away or had to fix
+## Five things I threw away or had to fix
 
 ### 1. `display: flex` on a `<td>` — broke the table's borders
 
@@ -46,7 +46,21 @@ ERROR: functions in index expression must be marked IMMUTABLE
 
 The fix is not just "add `AT TIME ZONE 'UTC'` to make it compile" — that would have been the easy wrong answer. For an Indian consumer app the months should be IST buckets anyway, so a payment at 01:30 IST on 1 April lands in April. The expression became `date_trunc('month', occurred_at AT TIME ZONE 'Asia/Kolkata')`, which is immutable *and* correct, and the analytics query uses the identical expression so it actually hits the index.
 
-### 4. `"UPI"` rendered as `"Upi"`
+### 4. A CSS custom property that silently disabled every font in the app
+
+The generated layout put `next/font`'s variable class on `<body>`, while the token file declared the font stack on `:root`:
+
+```css
+:root { --font-sans: var(--font-jakarta), ui-sans-serif, sans-serif; }
+```
+
+That looks fine and compiles fine. It is broken. A `var()` that cannot resolve **on the element where the custom property is declared** makes the whole property *guaranteed-invalid* — so `--font-sans` computed to nothing, every `font-family` referencing it was invalid, and the entire app silently fell back to **Times New Roman**.
+
+Nothing catches this. Not TypeScript, not the build, not a lint rule, not a test. The app renders, it just renders in the wrong typeface — and I spent a long time redesigning around what I thought was a font choice before checking `getComputedStyle` and finding `"Times"`. Moving the class to `<html>` fixed it.
+
+**The lesson I actually took:** when something looks wrong and the code looks right, measure the computed value rather than re-reading the source. Two of the five items on this list were found that way.
+
+### 5. `"UPI"` rendered as `"Upi"`
 
 A generic `humanizeMethod` helper lowercased the enum and title-cased each word: `CREDIT_CARD` → "Credit Card", correct; `UPI` → "Upi", wrong to anyone in India, which is everyone this app is for. Small, but it is the kind of thing that makes a product feel like it was built by someone who was not paying attention.
 
