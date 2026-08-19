@@ -12,6 +12,12 @@ engine = create_engine(
     pool_pre_ping=True,  # hosted Postgres (Neon/Render) drops idle connections
     pool_size=5,
     max_overflow=5,
+    # Fail fast when the database is unreachable. Without a connect timeout,
+    # psycopg waits on the OS default (~75s on macOS), so every request hangs
+    # until the client gives up and the UI shows a spinner forever instead of
+    # its error state. Five seconds is well past a healthy connect and short
+    # enough that a dead database surfaces as an error, not as a hang.
+    connect_args={"connect_timeout": 5},
     future=True,
 )
 
