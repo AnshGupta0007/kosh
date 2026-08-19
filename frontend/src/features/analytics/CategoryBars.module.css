@@ -80,7 +80,8 @@
 }
 
 .value {
-  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-figure);
   font-size: var(--text-md);
   text-align: right;
   white-space: nowrap;

@@ -112,7 +112,8 @@
   gap: var(--space-1);
   align-items: baseline;
   flex-shrink: 0;
-  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-figure);
   font-size: var(--text-xl);
   line-height: 1;
 }

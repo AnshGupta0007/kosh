@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-6);
   min-height: 60vh;
 }
 
@@ -19,9 +19,9 @@
 
 .heading {
   margin-top: var(--space-1);
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-figure);
 }
 
 .blurb {

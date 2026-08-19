@@ -39,6 +39,9 @@
 .monthRow {
   display: grid;
   grid-template-columns: repeat(var(--weeks), minmax(0, 1fr));
+  /* Offset by the weekday gutter without overflowing: a stretched grid with
+     margin-left runs past its container by exactly that margin. */
+  width: calc(100% - 34px);
   margin-left: 34px;
   height: 16px;
 }

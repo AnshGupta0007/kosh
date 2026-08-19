@@ -21,7 +21,9 @@
 }
 
 .md {
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
 }
 
 .lg {

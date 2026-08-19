@@ -78,8 +78,8 @@
   --rule-strong: rgb(20 18 15 / 16%);
 
   --text: var(--ink-900);
-  --text-secondary: var(--ink-600);
-  --text-tertiary: var(--ink-500);
+  --text-secondary: var(--ink-700);
+  --text-tertiary: var(--ink-600);
   --text-on-accent: #ffffff;
 
   --accent: var(--green-700);
@@ -139,8 +139,9 @@
      Two faces. Instrument Serif carries every figure that matters —
      it is the voice of the product. Inter runs the interface and never
      competes. */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Same family. "Display" now means heavier and tighter, not a second face. */
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Sized up a full step across the board. The first pass ran a 13px body
@@ -162,13 +163,16 @@
   --leading-snug: 1.45;
   --leading-normal: 1.6;
 
-  --tracking-tight: -0.025em;
+  --tracking-tight: -0.03em;
+  --tracking-figure: -0.045em;
   --tracking-normal: 0;
   --tracking-caps: 0.09em;
 
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
 
   /* -- 7. motion ----------------------------------------------------- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -178,8 +182,8 @@
   --duration-slow: 340ms;
 
   /* -- 8. layout ----------------------------------------------------- */
-  --topbar-height: 64px;
-  --content-max: 1240px;
+  --topbar-height: 72px;
+  --content-max: 1320px;
   --z-sticky: 20;
   --z-drawer: 60;
   --z-modal: 80;

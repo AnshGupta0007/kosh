@@ -12,7 +12,8 @@
 }
 
 .amount {
-  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-figure);
   font-size: var(--text-4xl);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
