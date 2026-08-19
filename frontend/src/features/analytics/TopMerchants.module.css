@@ -26,17 +26,21 @@
 
 /* The bar sits behind the text at low opacity: readable, and it never
    pushes the numbers out of alignment. */
+/* Gold at low alpha over a near-black surface renders brown and muddy.
+   A teal-to-transparent wash with a solid leading edge stays clean at every
+   width and keeps the gold reserved for coins. */
 .bar {
   position: absolute;
-  inset-block: 0;
+  inset-block: 2px;
   left: 0;
   z-index: 0;
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--accent) 22%, transparent),
-    transparent
+    color-mix(in srgb, var(--chart-secondary) 26%, transparent),
+    color-mix(in srgb, var(--chart-secondary) 6%, transparent)
   );
-  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--chart-secondary);
+  border-radius: 2px var(--radius-sm) var(--radius-sm) 2px;
   transition: width var(--duration-slow) var(--ease-out);
 }
 

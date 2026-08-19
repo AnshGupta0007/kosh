@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -31,11 +32,31 @@ interface MonthlyTrendProps {
 export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) {
   const hasSelection = selected.length > 0;
   const peak = Math.max(...points.map((point) => point.total_paise), 0);
+  const average =
+    points.length > 0
+      ? points.reduce((sum, point) => sum + point.total_paise, 0) / points.length
+      : 0;
 
   return (
     <div className={styles.wrap}>
       <ResponsiveContainer width="100%" height={228}>
         <BarChart data={points} margin={{ top: 8, right: 4, bottom: 0, left: -12 }} barGap={2}>
+          {/* Vertical gradients, so each bar is lit from the top rather than
+              being a flat block of colour. */}
+          <defs>
+            <linearGradient id="bar-peak" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--gold-300)" />
+              <stop offset="100%" stopColor="var(--gold-600)" />
+            </linearGradient>
+            <linearGradient id="bar-base" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--teal-400)" />
+              <stop offset="100%" stopColor="var(--teal-600)" stopOpacity="0.75" />
+            </linearGradient>
+            <linearGradient id="bar-dim" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--surface-3)" />
+              <stop offset="100%" stopColor="var(--surface-2)" />
+            </linearGradient>
+          </defs>
           <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
           <XAxis
             dataKey="label"
@@ -86,9 +107,16 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
               );
             }}
           />
+          {/* The average line turns twelve bars into a comparison. */}
+          <ReferenceLine
+            y={average}
+            stroke="var(--text-tertiary)"
+            strokeDasharray="3 4"
+            strokeOpacity={0.5}
+          />
           <Bar
             dataKey="total_paise"
-            radius={[3, 3, 0, 0]}
+            radius={[5, 5, 2, 2]}
             isAnimationActive={false}
             onClick={(entry: unknown) => {
               const point = entry as { month?: string };
@@ -104,10 +132,10 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
                   className={styles.bar}
                   fill={
                     dimmed
-                      ? "var(--surface-active)"
+                      ? "url(#bar-dim)"
                       : isPeak
-                        ? "var(--chart-primary)"
-                        : "var(--chart-secondary)"
+                        ? "url(#bar-peak)"
+                        : "url(#bar-base)"
                   }
                 />
               );
@@ -122,6 +150,9 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
         </span>
         <span className={styles.key}>
           <span className={`${styles.dot} ${styles.dotBase}`} aria-hidden /> Other months
+        </span>
+        <span className={styles.key}>
+          <span className={styles.dash} aria-hidden /> Average
         </span>
         <span className={styles.hint}>Click a bar to filter</span>
       </p>

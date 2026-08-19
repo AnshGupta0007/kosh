@@ -14,21 +14,22 @@
 :root {
   /* -- 1. primitives ------------------------------------------------ */
 
-  /* Neutrals carry a faint warm tint. A truly neutral grey reads clinical
-     next to the gold, and money apps should feel warm, not surgical. */
-  --ink-950: #08080b;
-  --ink-900: #0c0d11;
-  --ink-850: #111218;
-  --ink-800: #16181f;
-  --ink-750: #1c1e27;
-  --ink-700: #23262f;
-  --ink-600: #2f333e;
-  --ink-500: #454a58;
-  --ink-400: #6b7180;
-  --ink-300: #9aa1b1;
-  --ink-200: #c3c8d4;
-  --ink-100: #e4e7ee;
-  --ink-050: #f2f4f8;
+  /* Neutrals carry a violet-navy cast rather than being true grey. Pure
+     neutral greys read clinical next to gold; the slight cool tint is what
+     makes the gold look like metal instead of mustard. */
+  --ink-950: #07060d;
+  --ink-900: #0b0a13;
+  --ink-850: #100e1a;
+  --ink-800: #151221;
+  --ink-750: #1b1829;
+  --ink-700: #232034;
+  --ink-600: #302c45;
+  --ink-500: #46415f;
+  --ink-400: #6d6788;
+  --ink-300: #9d97b5;
+  --ink-200: #c6c2d6;
+  --ink-100: #e6e4ee;
+  --ink-050: #f3f2f8;
   --ink-000: #ffffff;
 
   /* Gold is the product's signature — it is the coin. Used sparingly:
@@ -97,6 +98,34 @@
   --chart-axis: var(--ink-400);
   --chart-primary: var(--gold-400);
   --chart-secondary: var(--teal-400);
+
+  /* Signature gradients. Declared once so the card, the primary button and
+     the chart fills are provably the same gold. */
+  --gradient-gold: linear-gradient(135deg, #f7dfa0 0%, #e9c25c 38%, #c08a24 100%);
+  --gradient-gold-soft: linear-gradient(180deg, var(--gold-400), var(--gold-600));
+  --gradient-card:
+    linear-gradient(145deg, #2a2340 0%, #171426 45%, #0e0c17 100%);
+  --gradient-sheen:
+    linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 14%) 45%, transparent 60%);
+
+  /* Ambient light behind the page. Two coloured pools, very low opacity —
+     enough to stop the background reading as flat black. */
+  --ambient-gold: radial-gradient(
+    900px 420px at 12% -8%,
+    rgb(233 194 92 / 13%),
+    transparent 70%
+  );
+  --ambient-violet: radial-gradient(
+    760px 400px at 88% 2%,
+    rgb(139 109 240 / 12%),
+    transparent 68%
+  );
+
+  /* The 1px lit top edge that makes a surface read as physical rather than
+     as a rectangle of colour. */
+  --edge-highlight: inset 0 1px 0 rgb(255 255 255 / 7%);
+  --glow-gold: 0 0 32px rgb(233 194 92 / 22%);
+  --glow-teal: 0 0 28px rgb(62 207 178 / 18%);
 
   /* -- 3. space ----------------------------------------------------- */
   /* A 4px base. Named by size, not by use, so a gap and a padding of the
@@ -221,4 +250,21 @@
   --shadow-md: 0 1px 2px rgb(14 16 24 / 6%), 0 8px 24px rgb(14 16 24 / 8%);
   --shadow-lg: 0 2px 6px rgb(14 16 24 / 8%), 0 24px 48px rgb(14 16 24 / 12%);
   --shadow-glow: 0 0 0 1px rgb(192 138 36 / 30%), 0 8px 32px rgb(192 138 36 / 10%);
+
+  /* The card keeps its dark treatment in light mode — a credit card is a
+     physical object, and it does not invert just because the page did. */
+  --edge-highlight: inset 0 1px 0 rgb(255 255 255 / 80%);
+  --glow-gold: 0 0 32px rgb(192 138 36 / 16%);
+  --glow-teal: 0 0 28px rgb(15 140 120 / 14%);
+
+  --ambient-gold: radial-gradient(
+    900px 420px at 12% -8%,
+    rgb(223 169 58 / 12%),
+    transparent 70%
+  );
+  --ambient-violet: radial-gradient(
+    760px 400px at 88% 2%,
+    rgb(139 109 240 / 10%),
+    transparent 68%
+  );
 }

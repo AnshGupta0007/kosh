@@ -58,7 +58,7 @@
 
 /* ---------------------------------------------------------- variants */
 .primary {
-  background: linear-gradient(180deg, var(--gold-400), var(--gold-500));
+  background: var(--gradient-gold);
   color: var(--on-accent);
   border-color: var(--gold-600);
   font-weight: var(--weight-semibold);
@@ -66,8 +66,8 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, var(--gold-300), var(--gold-400));
-  box-shadow: var(--shadow-glow);
+  filter: brightness(1.08);
+  box-shadow: var(--edge-highlight), var(--glow-gold);
 }
 
 .secondary {

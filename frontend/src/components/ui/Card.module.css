@@ -3,7 +3,9 @@
   background: var(--surface-1);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  /* The inset highlight is the whole trick: a 1px lit top edge reads as a
+     surface catching the light, where a flat fill reads as a rectangle. */
+  box-shadow: var(--edge-highlight), var(--shadow-md);
 }
 
 .pad-none {

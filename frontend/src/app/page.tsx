@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 
 import { AnalyticsPanel } from "@/features/analytics/AnalyticsPanel";
+import { HeroSummary } from "@/features/analytics/HeroSummary";
 import { TransactionsPanel } from "@/features/transactions/TransactionsPanel";
 import { useFilters } from "@/lib/hooks/useFilters";
 
@@ -20,16 +21,10 @@ function Dashboard() {
   const { filters, update, apply, reset } = useFilters();
 
   return (
-    <div className={styles.page}>
-      <header className={styles.intro}>
-        <p className={styles.eyebrow}>Your money, this year</p>
-        <h1 className={styles.heading}>Overview</h1>
-        <p className={styles.blurb}>
-          Everything below is one filtered view. Click a category, a month or a
-          merchant to narrow it — the charts and the table always agree because
-          they read the same filters from the URL.
-        </p>
-      </header>
+    <div className={styles.page} data-reveal>
+      <h1 className="sr-only">Overview</h1>
+
+      <HeroSummary filters={filters} />
 
       <AnalyticsPanel filters={filters} onApply={apply} />
 

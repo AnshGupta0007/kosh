@@ -87,6 +87,12 @@
   background: var(--chart-secondary);
 }
 
+.dash {
+  width: 12px;
+  height: 0;
+  border-top: 1px dashed var(--text-tertiary);
+}
+
 .hint {
   margin-left: auto;
   font-style: italic;

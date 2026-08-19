@@ -1,0 +1,90 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: center;
+  padding: var(--space-6) 0 var(--space-2);
+}
+
+.summary {
+  min-width: 0;
+}
+
+.headingRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.eyebrow {
+  color: var(--accent-text);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+/* The largest thing on the page, by a wide margin. If a reader only takes
+   one number away, it should be this one. */
+.headline {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(
+    170deg,
+    var(--text-primary) 30%,
+    color-mix(in srgb, var(--text-primary) 55%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subline {
+  max-width: 46ch;
+  margin-top: var(--space-3);
+  color: var(--text-tertiary);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+.subline strong {
+  color: var(--text-secondary);
+  font-weight: var(--weight-semibold);
+}
+
+.refund {
+  color: var(--positive) !important;
+}
+
+/* Capped width and a taller box: stretched across the full column at 46px
+   it read as a stray line rather than as a chart of the year. */
+.spark {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: 68px;
+  margin-top: var(--space-5);
+}
+
+.sparkLabel {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  margin-top: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding-top: var(--space-2);
+  }
+}

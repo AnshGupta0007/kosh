@@ -63,16 +63,9 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
     <div className={styles.stack}>
       <Card className={styles.kpiCard} padding="md">
         <div className={styles.kpis} aria-busy={isFetching}>
-          <Stat
-            label="Total spent"
-            value={kpis ? formatRupeesWhole(kpis.total_spend_paise) : "—"}
-            sub={
-              kpis && kpis.total_refund_paise > 0
-                ? `${formatRupeesCompact(kpis.total_refund_paise)} refunded back`
-                : "No refunds in this view"
-            }
-            loading={isPending}
-          />
+          {/* Total spend is deliberately absent: it is the headline figure in
+              the hero above, and repeating it here would spend the row's most
+              valuable slot on something the reader has already been told. */}
           <Stat
             label="Payments"
             value={kpis ? formatNumber(kpis.transaction_count) : "—"}
@@ -82,7 +75,17 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
           <Stat
             label="Average payment"
             value={kpis ? formatRupeesWhole(kpis.average_paise) : "—"}
-            sub={kpis ? `Largest ${formatRupeesCompact(kpis.largest_paise)}` : undefined}
+            sub="Per successful payment"
+            loading={isPending}
+          />
+          <Stat
+            label="Largest payment"
+            value={kpis ? formatRupeesCompact(kpis.largest_paise) : "—"}
+            sub={
+              kpis && kpis.total_refund_paise > 0
+                ? `${formatRupeesCompact(kpis.total_refund_paise)} refunded back`
+                : "No refunds in this view"
+            }
             loading={isPending}
           />
           <Stat

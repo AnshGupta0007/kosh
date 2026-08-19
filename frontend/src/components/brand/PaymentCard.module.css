@@ -1,0 +1,193 @@
+/* The Kosh card — drawn in CSS, not an image.
+
+   Four layers make it read as a physical object rather than a rectangle:
+     1. a diagonal gradient body, so the surface has a light direction
+     2. a lit top edge (inset highlight) and a dark outer shadow
+     3. a sheen that sweeps across on hover
+     4. a fine diagonal texture, low enough to be felt and not seen
+*/
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  aspect-ratio: 1.586; /* ISO/IEC 7810 ID-1 — a real card's proportions */
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-4) var(--space-5);
+  overflow: hidden;
+  background: var(--gradient-card);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    var(--edge-highlight),
+    0 2px 6px rgb(0 0 0 / 40%),
+    0 24px 48px rgb(0 0 0 / 45%),
+    var(--glow-gold);
+  color: #f4f2fa;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* Fine diagonal weave. Two repeating gradients, barely visible, which is
+   the point — it stops the gradient looking like flat vector fill. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgb(255 255 255 / 2.5%) 0 1px,
+      transparent 1px 5px
+    );
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.sheen {
+  position: absolute;
+  inset: -40% -60%;
+  background: var(--gradient-sheen);
+  transform: translateX(-60%);
+  transition: transform 900ms var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover .sheen {
+  transform: translateX(60%);
+}
+
+.head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  /* Gold, but as metal: the gradient clipped to the glyphs. */
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Two overlapping rings, the universal "payment network" mark. */
+.network {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+.ring {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold-400);
+  opacity: 0.85;
+}
+
+.ring:last-child {
+  margin-left: -9px;
+  background: var(--coral-400);
+  mix-blend-mode: screen;
+}
+
+/* The card's height is fixed by its aspect ratio, so every child is a flex
+   item that can be compressed. The chip and the network mark are physical
+   objects with fixed proportions and must never squash. */
+.chip {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  width: 38px;
+  height: 29px;
+  padding: 4px;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-xs);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 18%);
+}
+
+.chip span {
+  background: rgb(0 0 0 / 14%);
+  border-radius: 1px;
+}
+
+.number {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  letter-spacing: 0.08em;
+}
+
+.dots {
+  opacity: 0.55;
+  font-size: var(--text-md);
+}
+
+.last4 {
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.14em;
+}
+
+.foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.microLabel {
+  display: block;
+  color: rgb(244 242 250 / 52%);
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+.holderName {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.balance {
+  text-align: right;
+}
+
+.coins {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: 2px;
+  color: var(--gold-300);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.worth {
+  display: block;
+  color: rgb(244 242 250 / 45%);
+  font-size: 10px;
+}
+
+@media (max-width: 520px) {
+  .card {
+    max-width: none;
+  }
+}

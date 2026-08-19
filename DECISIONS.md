@@ -97,6 +97,24 @@ The brief requires the table to be hand-built and says it is where the CSS is ju
 
 ---
 
+## 7b. The visual language, and why the card exists
+
+The first version of this UI was competent and completely forgettable — near-black surfaces, grey cards, an accent colour that barely appeared. It looked like every dashboard template, which for a frontend-focused role is the wrong thing to hand in.
+
+Four changes fixed it, and each one is a rule rather than a decoration:
+
+**The card is the product's subject.** This app is about paying a credit-card bill, and the first build had no card in it — just charts about an abstraction. `PaymentCard` is drawn entirely in CSS at ISO/IEC 7810 ID-1 proportions (1.586:1), so it stays sharp at any size and costs nothing to load. It is also the right home for the coin balance: on the card, where a real rewards programme puts it. Notably it keeps its dark treatment in light mode — a physical object does not invert because the page did.
+
+**Gold means coins, and nothing else.** The accent appears on the balance, the coin figures, the primary action and the peak month. Everywhere else is neutral. An accent used for everything is an accent used for nothing.
+
+**Neutrals are tinted, not grey.** The greys carry a violet-navy cast. Against a true neutral grey, gold reads as mustard; against a slightly cool ground it reads as metal. Two fixed pools of coloured light behind the page (`body::before`, one element, no JavaScript) stop the background reading as flat black.
+
+**Surfaces are lit, not filled.** Every card carries `--edge-highlight`: a 1px inset highlight on its top edge. It is the difference between a surface catching the light and a rectangle of colour, and it costs one token.
+
+The typography follows the same discipline — Instrument Serif is reserved for figures that carry the story (the headline spend, KPI values, a transaction amount) and Inter with tabular figures runs everything else. One number on the Overview page is deliberately far larger than anything else, because if a reader takes one figure away it should be that one.
+
+---
+
 ## 8. Sticky header inside a bounded scroll region
 
 The table's scroll container has a `max-height` and `overflow: auto`, and `<thead>` sticks to its top — rather than the header sticking to the page under the app bar.
