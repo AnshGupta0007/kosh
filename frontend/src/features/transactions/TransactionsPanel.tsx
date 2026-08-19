@@ -64,8 +64,14 @@ export function TransactionsPanel({
             {data ? (
               <>
                 <strong>{formatNumber(data.meta.total)}</strong>{" "}
-                {filtered ? "matching" : "total"} ·{" "}
-                <strong>{formatRupeesCompact(data.filtered_total_paise)}</strong> paid
+                {filtered ? "matching" : "total"}
+                {/* Omit a zero: "₹0 paid" is noise on a refunds-only view. */}
+                {data.filtered_total_paise > 0 ? (
+                  <>
+                    {" · "}
+                    <strong>{formatRupeesCompact(data.filtered_total_paise)}</strong> paid
+                  </>
+                ) : null}
                 {data.filtered_refund_paise > 0 ? (
                   <>
                     {" "}

@@ -28,17 +28,33 @@ def _params(session: Session, filters: TransactionFilters, user_id: int):
     return where, params
 
 
+def _measure(filters: TransactionFilters) -> tuple[str, str]:
+    """Which rows the money aggregates describe, and the sign that makes them positive.
+
+    Normally these describe *spend*, so refunds are excluded — money coming
+    back is not money going out. But when the user filters to refunds there is
+    no spend left to describe, and hard-coding DEBIT made every figure on the
+    page read zero and every breakdown come back empty. The measure now
+    follows the filter: ask for refunds and the aggregates describe refunds,
+    with the sign flipped so the totals read positive.
+    """
+    if filters.flow == "REFUND":
+        return ("t.flow = 'REFUND'", "-t.amount_paise")
+    return ("t.flow = 'DEBIT'", "t.amount_paise")
+
+
 def kpis(session: Session, *, user_id: int, filters: TransactionFilters) -> dict[str, Any]:
     where, params = _params(session, filters, user_id)
+    rows_of, amount = _measure(filters)
     row = session.execute(
         text(
             f"""
             SELECT
-                coalesce(sum(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0)   AS spend,
+                coalesce(sum({amount}) FILTER (WHERE {rows_of}), 0)   AS spend,
                 coalesce(sum(-t.amount_paise) FILTER (WHERE t.flow = 'REFUND'), 0) AS refunds,
                 count(*)                                                           AS txns,
-                coalesce(avg(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0)   AS average,
-                coalesce(max(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0)   AS largest,
+                coalesce(avg({amount}) FILTER (WHERE {rows_of}), 0)   AS average,
+                coalesce(max({amount}) FILTER (WHERE {rows_of}), 0)   AS largest,
                 count(*) FILTER (WHERE t.status = 'SUCCESS')                       AS successes,
                 count(*) FILTER (WHERE t.status = 'FAILED')                        AS failed,
                 count(*) FILTER (WHERE t.status = 'PENDING')                       AS pending,
@@ -70,6 +86,7 @@ def kpis(session: Session, *, user_id: int, filters: TransactionFilters) -> dict
 
 def by_category(session: Session, *, user_id: int, filters: TransactionFilters) -> list[dict]:
     where, params = _params(session, filters, user_id)
+    rows_of, amount = _measure(filters)
     rows = session.execute(
         text(
             f"""
@@ -77,10 +94,10 @@ def by_category(session: Session, *, user_id: int, filters: TransactionFilters) 
                 coalesce(c.name, 'Uncategorised') AS category,
                 coalesce(c.slug, 'uncategorised') AS slug,
                 coalesce(c.hue, 220)              AS hue,
-                sum(t.amount_paise)               AS total,
+                sum({amount})                     AS total,
                 count(*)                          AS txns
             {BASE_FROM}
-            WHERE {where} AND t.flow = 'DEBIT'
+            WHERE {where} AND {rows_of}
             GROUP BY 1, 2, 3
             ORDER BY total DESC
             """
@@ -104,13 +121,14 @@ def by_category(session: Session, *, user_id: int, filters: TransactionFilters) 
 
 def by_month(session: Session, *, user_id: int, filters: TransactionFilters) -> list[dict]:
     where, params = _params(session, filters, user_id)
+    rows_of, amount = _measure(filters)
     rows = session.execute(
         text(
             f"""
             SELECT
                 to_char({MONTH_EXPR}, 'YYYY-MM')  AS month,
                 to_char({MONTH_EXPR}, 'Mon ''YY') AS label,
-                coalesce(sum(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0)   AS total,
+                coalesce(sum({amount}) FILTER (WHERE {rows_of}), 0)   AS total,
                 coalesce(sum(-t.amount_paise) FILTER (WHERE t.flow = 'REFUND'), 0) AS refunds,
                 count(*)                                                           AS txns,
                 coalesce(sum(t.coins_earned), 0)                                   AS coins
@@ -146,12 +164,13 @@ def by_day(session: Session, *, user_id: int, filters: TransactionFilters) -> li
     grid, which keeps the response to ~380 rows instead of a dense series.
     """
     where, params = _params(session, filters, user_id)
+    rows_of, amount = _measure(filters)
     rows = session.execute(
         text(
             f"""
             SELECT
                 to_char({DAY_EXPR}, 'YYYY-MM-DD') AS day,
-                coalesce(sum(t.amount_paise) FILTER (WHERE t.flow = 'DEBIT'), 0) AS total,
+                coalesce(sum({amount}) FILTER (WHERE {rows_of}), 0) AS total,
                 count(*) AS txns
             {BASE_FROM}
             WHERE {where}
@@ -172,14 +191,22 @@ def by_day(session: Session, *, user_id: int, filters: TransactionFilters) -> li
     ]
 
 
-def _named_breakdown(session: Session, where: str, params: dict, column: str, limit: int | None):
+def _named_breakdown(
+    session: Session,
+    where: str,
+    params: dict,
+    column: str,
+    limit: int | None,
+    rows_of: str,
+    amount: str,
+):
     limit_sql = f"LIMIT {int(limit)}" if limit else ""
     rows = session.execute(
         text(
             f"""
-            SELECT {column} AS name, sum(t.amount_paise) AS total, count(*) AS txns
+            SELECT {column} AS name, sum({amount}) AS total, count(*) AS txns
             {BASE_FROM}
-            WHERE {where} AND t.flow = 'DEBIT'
+            WHERE {where} AND {rows_of}
             GROUP BY 1
             ORDER BY total DESC
             {limit_sql}
@@ -195,11 +222,11 @@ def _named_breakdown(session: Session, where: str, params: dict, column: str, li
 
 def by_method(session: Session, *, user_id: int, filters: TransactionFilters) -> list[dict]:
     where, params = _params(session, filters, user_id)
-    return _named_breakdown(session, where, params, "t.method::text", None)
+    return _named_breakdown(session, where, params, "t.method::text", None, *_measure(filters))
 
 
 def top_merchants(
     session: Session, *, user_id: int, filters: TransactionFilters, limit: int = 8
 ) -> list[dict]:
     where, params = _params(session, filters, user_id)
-    return _named_breakdown(session, where, params, "m.name", limit)
+    return _named_breakdown(session, where, params, "m.name", limit, *_measure(filters))

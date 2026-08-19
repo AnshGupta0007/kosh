@@ -31,6 +31,9 @@ export function HeroSummary({ filters }: HeroSummaryProps) {
   const { data: me } = useMe();
   const mounted = useMounted();
   const filtered = hasActiveFilters(filters);
+  // Filtering to refunds makes every money figure describe refunds, so the
+  // words have to follow — calling a refund total "spend" is just wrong.
+  const refundsOnly = filters.flow === "REFUND";
 
   const spend = analytics?.kpis.total_spend_paise ?? 0;
   const animatedSpend = useCountUp(spend);
@@ -47,7 +50,9 @@ export function HeroSummary({ filters }: HeroSummaryProps) {
 
       <div className={styles.summary}>
         <div className={styles.headingRow}>
-          <p className={styles.eyebrow}>{filtered ? "Filtered spend" : "Spend this year"}</p>
+          <p className={styles.eyebrow}>
+            {refundsOnly ? "Refunded to you" : filtered ? "Filtered spend" : "Spend this year"}
+          </p>
           {filtered ? <Badge tone="accent">Filters active</Badge> : null}
         </div>
 
@@ -59,18 +64,25 @@ export function HeroSummary({ filters }: HeroSummaryProps) {
 
         <p className={styles.subline}>
           {analytics ? (
-            <>
-              across <strong>{formatNumber(analytics.kpis.transaction_count)}</strong> payments
-              to <strong>{analytics.kpis.distinct_merchants}</strong> merchants
-              {analytics.kpis.total_refund_paise > 0 ? (
-                <>
-                  , with <strong className={styles.refund}>
-                    {formatRupeesCompact(analytics.kpis.total_refund_paise)}
-                  </strong>{" "}
-                  refunded back
-                </>
-              ) : null}
-            </>
+            refundsOnly ? (
+              <>
+                across <strong>{formatNumber(analytics.kpis.transaction_count)}</strong> refunds
+                from <strong>{analytics.kpis.distinct_merchants}</strong> merchants
+              </>
+            ) : (
+              <>
+                across <strong>{formatNumber(analytics.kpis.transaction_count)}</strong> payments
+                to <strong>{analytics.kpis.distinct_merchants}</strong> merchants
+                {analytics.kpis.total_refund_paise > 0 ? (
+                  <>
+                    , with <strong className={styles.refund}>
+                      {formatRupeesCompact(analytics.kpis.total_refund_paise)}
+                    </strong>{" "}
+                    refunded back
+                  </>
+                ) : null}
+              </>
+            )
           ) : (
             "Loading the full ledger…"
           )}

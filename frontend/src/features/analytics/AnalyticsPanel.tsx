@@ -34,6 +34,7 @@ interface AnalyticsPanelProps {
 export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
   const { data, isPending, isFetching, isError, error, refetch } = useAnalytics(filters);
   const kpis = data?.kpis;
+  const refundsOnly = filters.flow === "REFUND";
 
   const toggleCategory = (category: string) =>
     onApply((state) => ({ ...state, categories: toggleValue(state.categories, category) }));
@@ -73,24 +74,26 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
               the hero above, and repeating it here would spend the row's most
               valuable slot on something the reader has already been told. */}
           <Stat
-            label="Payments"
+            label={refundsOnly ? "Refunds" : "Payments"}
             value={kpis ? formatNumber(kpis.transaction_count) : "—"}
             sub={kpis ? `Across ${kpis.distinct_merchants} merchants` : undefined}
             loading={isPending}
           />
           <Stat
-            label="Average payment"
+            label={refundsOnly ? "Average refund" : "Average payment"}
             value={kpis ? formatRupeesWhole(kpis.average_paise) : "—"}
-            sub="Per successful payment"
+            sub={refundsOnly ? "Per refund" : "Per successful payment"}
             loading={isPending}
           />
           <Stat
-            label="Largest payment"
+            label={refundsOnly ? "Largest refund" : "Largest payment"}
             value={kpis ? formatRupeesCompact(kpis.largest_paise) : "—"}
             sub={
-              kpis && kpis.total_refund_paise > 0
-                ? `${formatRupeesCompact(kpis.total_refund_paise)} refunded back`
-                : "No refunds in this view"
+              refundsOnly
+                ? "Money returned, not spent"
+                : kpis && kpis.total_refund_paise > 0
+                  ? `${formatRupeesCompact(kpis.total_refund_paise)} refunded back`
+                  : "No refunds in this view"
             }
             loading={isPending}
           />
@@ -113,7 +116,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
             label="Coins earned"
             value={kpis ? formatNumber(kpis.coins_earned) : "—"}
             tone="accent"
-            sub="1 coin per ₹100 spent"
+            sub={refundsOnly ? "Refunds do not earn coins" : "1 coin per ₹100 spent"}
             loading={isPending}
           />
         </div>
@@ -141,7 +144,7 @@ export function AnalyticsPanel({ filters, onApply }: AnalyticsPanelProps) {
         <Card as="section" aria-labelledby="category-heading">
           <CardHeader
             id="category-heading"
-            title="Where the money goes"
+            title={refundsOnly ? "Where refunds came from" : "Where the money goes"}
             subtitle="Tap one to filter everything below"
           />
           {data ? (
