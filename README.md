@@ -89,7 +89,15 @@ cd frontend && npm run dev                                          # terminal 2
 ```
 </details>
 
-**The seed command is `python -m app.seed.run` from `backend/`.** It drops and recreates the schema, normalises the dataset, loads it, mints the coin ledger and writes the data-quality report. Re-running it is safe.
+**The seed command is `.venv/bin/python -m app.seed.run`, run from `backend/`.**
+(`make seed` does the same thing from the repo root. Use the venv's Python explicitly — a bare `python` picks up the system interpreter, which does not have the dependencies.)
+
+To seed a **hosted** database instead of the local one, point `DATABASE_URL` at it for that one command:
+
+```bash
+cd backend
+DATABASE_URL="postgresql://…your hosted connection string…" .venv/bin/python -m app.seed.run
+``` It drops and recreates the schema, normalises the dataset, loads it, mints the coin ledger and writes the data-quality report. Re-running it is safe.
 
 ```bash
 make test    # 36 backend tests against a real throwaway Postgres database
