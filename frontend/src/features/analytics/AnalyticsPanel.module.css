@@ -1,0 +1,133 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kpiCard {
+  overflow: hidden;
+}
+
+/* Five figures across on desktop, collapsing to two on a phone. Dividers
+   are drawn with a border on the cell, not a separate element. */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.kpis > * {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--border-subtle);
+}
+
+.kpis > *:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.chartSkeleton {
+  height: 228px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--surface-3) 40%,
+    var(--surface-2) 80%
+  );
+  background-size: 300% 100%;
+  border-radius: var(--radius-md);
+  animation: shimmer 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 140% 0;
+  }
+
+  to {
+    background-position: -40% 0;
+  }
+}
+
+/* ------------------------------------------------------------ methods */
+.methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.methodHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.methodName {
+  font-size: var(--text-sm);
+}
+
+.methodValue {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.methodShare {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+}
+
+.track {
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--chart-secondary), var(--chart-primary));
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* --------------------------------------------------------- responsive */
+@media (max-width: 1080px) {
+  .chartGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .kpis > *:nth-child(3n + 1) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-5);
+  }
+
+  .kpis > *,
+  .kpis > *:nth-child(3n + 1) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
