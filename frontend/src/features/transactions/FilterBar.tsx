@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { Button, Icon, Input, MultiSelect, SegmentedControl } from "@/components/ui";
 import { humanizeMethod } from "@/lib/format";
@@ -37,18 +37,34 @@ export function FilterBar({ filters, options, onChange, onReset, hasFilters }: F
   const panelId = useId();
   const activeCount = activeChips(filters).filter((chip) => chip.key !== "search").length;
 
+  // The last value this component itself wrote to the URL.
+  //
+  // Without it the two effects below fight each other and eat keystrokes:
+  // the debounced push updates the URL, the URL change re-runs the sync
+  // effect, and the sync effect rewinds the input to a value that is now
+  // 250ms out of date — deleting whatever was typed in the meantime. Typing
+  // "swiggy" would land as "sigy".
+  //
+  // Comparing against this ref tells the two cases apart: an echo of our own
+  // write is ignored, while a genuinely external change (a cleared chip, the
+  // back button, the command palette) still syncs the box.
+  const lastPushedSearch = useRef(filters.search);
+
   // Push the settled value up.
   useEffect(() => {
-    if (debouncedSearch !== filters.search) onChange({ search: debouncedSearch });
-    // Deliberately keyed on the debounced value alone: re-running this when
-    // `filters.search` changes would fight the user's typing.
+    if (debouncedSearch === lastPushedSearch.current) return;
+    lastPushedSearch.current = debouncedSearch;
+    onChange({ search: debouncedSearch });
+    // Keyed on the debounced value alone; re-running on `filters.search`
+    // would fight the user's typing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
-  // Keep the box in step when the URL changes from elsewhere (a cleared chip,
-  // the back button, the command palette).
+  // Sync the box when the URL changed from somewhere other than this input.
   useEffect(() => {
-    setSearchDraft((current) => (current === filters.search ? current : filters.search));
+    if (filters.search === lastPushedSearch.current) return;
+    lastPushedSearch.current = filters.search;
+    setSearchDraft(filters.search);
   }, [filters.search]);
 
   return (
