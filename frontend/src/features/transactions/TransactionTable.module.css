@@ -205,10 +205,16 @@
 
 /* -------------------------------------------------------------- cells */
 .cellDate {
+  white-space: nowrap;
+}
+
+/* Stacking lives on an inner element, never on the <td> itself — a flex
+   <td> leaves the table layout algorithm and its border stops aligning
+   with the rest of the row. */
+.dateStack {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  white-space: nowrap;
 }
 
 .dateMain {
@@ -263,10 +269,13 @@
 }
 
 .cellStatus {
+  white-space: nowrap;
+}
+
+.statusStack {
   display: flex;
   gap: var(--space-2);
   align-items: center;
-  white-space: nowrap;
 }
 
 /* Marks a row the loader repaired. Deliberately quiet — it is provenance,
@@ -378,6 +387,9 @@
 
   .td[data-cell="date"] {
     grid-area: date;
+  }
+
+  .dateStack {
     flex-direction: row;
     gap: var(--space-2);
     align-items: baseline;
@@ -385,6 +397,9 @@
 
   .td[data-cell="status"] {
     grid-area: status;
+  }
+
+  .cellStatus .statusStack {
     justify-content: flex-end;
   }
 

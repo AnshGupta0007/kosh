@@ -230,8 +230,13 @@ function TransactionRow({ row, selected, onSelect }: RowProps) {
       }}
     >
       <td className={`${styles.td} ${styles.cellDate}`} data-cell="date">
-        <span className={styles.dateMain}>{formatDate(row.occurred_at)}</span>
-        <span className={styles.dateTime}>{formatTime(row.occurred_at)}</span>
+        {/* Cells stay display:table-cell; the stacking happens on an inner
+            element. Setting display:flex on a <td> takes it out of the table
+            layout algorithm and its borders stop lining up with the row. */}
+        <span className={styles.dateStack}>
+          <span className={styles.dateMain}>{formatDate(row.occurred_at)}</span>
+          <span className={styles.dateTime}>{formatTime(row.occurred_at)}</span>
+        </span>
       </td>
 
       <td className={`${styles.td} ${styles.cellMerchant}`} data-cell="merchant">
@@ -252,21 +257,23 @@ function TransactionRow({ row, selected, onSelect }: RowProps) {
       </td>
 
       <td className={`${styles.td} ${styles.cellStatus}`} data-cell="status">
-        <Badge tone={STATUS_TONE[row.status]} dot>
-          {humanizeStatus(row.status)}
-        </Badge>
-        {row.quality_flags.length > 0 ? (
-          <span
-            className={styles.flagDot}
-            title={`${row.quality_flags.length} data repair${
-              row.quality_flags.length > 1 ? "s" : ""
-            } applied — open the row for detail`}
-          >
-            <span className="sr-only">
-              {row.quality_flags.length} data repairs applied to this row
+        <span className={styles.statusStack}>
+          <Badge tone={STATUS_TONE[row.status]} dot>
+            {humanizeStatus(row.status)}
+          </Badge>
+          {row.quality_flags.length > 0 ? (
+            <span
+              className={styles.flagDot}
+              title={`${row.quality_flags.length} data repair${
+                row.quality_flags.length > 1 ? "s" : ""
+              } applied — open the row for detail`}
+            >
+              <span className="sr-only">
+                {row.quality_flags.length} data repairs applied to this row
+              </span>
             </span>
-          </span>
-        ) : null}
+          ) : null}
+        </span>
       </td>
 
       <td className={`${styles.td} ${styles.alignEnd} ${styles.hideMd}`} data-cell="coins">

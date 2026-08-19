@@ -113,11 +113,19 @@ export function formatPercent(value: number, digits = 1): string {
 
 /** "Credit Card" from "CREDIT_CARD" — enum values are never shown raw. */
 export function humanizeMethod(method: string): string {
+  // UPI is an initialism, not a word; title-casing it to "Upi" looks wrong
+  // to anyone in India, which is everyone this app is for.
+  if (method === "UPI") return "UPI";
   return method
     .toLowerCase()
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+/** "1 row" / "12 rows" — never "1 rows". */
+export function pluralize(count: number, singular: string, plural?: string): string {
+  return count === 1 ? singular : (plural ?? `${singular}s`);
 }
 
 export function humanizeStatus(status: string): string {

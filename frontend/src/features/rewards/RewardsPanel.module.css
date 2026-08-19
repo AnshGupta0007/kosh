@@ -16,11 +16,25 @@
   font-size: var(--text-2xs);
 }
 
+/* Capped at three columns rather than auto-filling to four: six rewards
+   then read as two balanced rows instead of 4 + 2 with a hole in it. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
   margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card {

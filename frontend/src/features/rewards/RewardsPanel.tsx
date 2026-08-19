@@ -3,7 +3,12 @@
 import { useState } from "react";
 
 import { Badge, Button, Card, CardHeader, CoinAmount, ErrorState, Skeleton } from "@/components/ui";
-import { formatDate, formatNumber, formatRupeesWhole } from "@/lib/format";
+import {
+  formatDate,
+  formatNumber,
+  formatRupeesCompact,
+  formatRupeesWhole,
+} from "@/lib/format";
 import { useBalance, useRedemptions, useRewards } from "@/lib/hooks/useApi";
 import type { Reward } from "@/lib/types";
 
@@ -125,8 +130,8 @@ export function RewardsPanel() {
                             />
                           </div>
                           <p className={styles.progressText}>
-                            {formatNumber(reward.coins_short)} coins to go —{" "}
-                            about {formatRupeesWhole(reward.coins_short * 100 * 100)} more spend
+                            {formatNumber(reward.coins_short)} coins to go — about{" "}
+                            {formatRupeesCompact(reward.coins_short * 100 * 100)} more spend
                           </p>
                         </div>
                       ) : null}

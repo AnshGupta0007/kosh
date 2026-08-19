@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { Badge, Card, CardHeader, ErrorState, Skeleton, Stat } from "@/components/ui";
-import { formatNumber, formatPercent } from "@/lib/format";
+import { formatNumber, formatPercent, pluralize } from "@/lib/format";
 import { useDataQuality } from "@/lib/hooks/useApi";
 import type { QualityIssue } from "@/lib/types";
 
@@ -162,7 +162,9 @@ export function DataHealthPanel() {
                       </div>
                       <span className={styles.issueCount}>
                         {formatNumber(issue.row_count)}
-                        <span className={styles.issueCountUnit}>rows</span>
+                        <span className={styles.issueCountUnit}>
+                          {pluralize(issue.row_count, "row")}
+                        </span>
                       </span>
                     </div>
 

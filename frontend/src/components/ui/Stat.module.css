@@ -37,6 +37,21 @@
   line-height: var(--leading-snug);
 }
 
+/* A full rupee figure like ₹7,06,98,019 does not fit a half-width column on
+   a 360px screen at the desktop size, and an ellipsised number is useless.
+   Step the display size down instead of clipping the value. */
+@media (max-width: 620px) {
+  .value {
+    font-size: var(--text-xl);
+  }
+}
+
+@media (max-width: 380px) {
+  .value {
+    font-size: var(--text-lg);
+  }
+}
+
 .accent .value {
   color: var(--accent-text);
 }
