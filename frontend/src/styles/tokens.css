@@ -1,0 +1,224 @@
+/* =====================================================================
+   Kosh design tokens
+   ---------------------------------------------------------------------
+   Every colour, space, radius, shadow and type step in the app resolves
+   to something declared here. Components never hard-code a hex value, so
+   the whole product re-themes from this one file.
+
+   Structure:
+     1. primitives   raw values, no meaning attached
+     2. semantics    what a primitive means in this product (surface, text)
+     3. themes       the semantic layer re-pointed for light mode
+   ===================================================================== */
+
+:root {
+  /* -- 1. primitives ------------------------------------------------ */
+
+  /* Neutrals carry a faint warm tint. A truly neutral grey reads clinical
+     next to the gold, and money apps should feel warm, not surgical. */
+  --ink-950: #08080b;
+  --ink-900: #0c0d11;
+  --ink-850: #111218;
+  --ink-800: #16181f;
+  --ink-750: #1c1e27;
+  --ink-700: #23262f;
+  --ink-600: #2f333e;
+  --ink-500: #454a58;
+  --ink-400: #6b7180;
+  --ink-300: #9aa1b1;
+  --ink-200: #c3c8d4;
+  --ink-100: #e4e7ee;
+  --ink-050: #f2f4f8;
+  --ink-000: #ffffff;
+
+  /* Gold is the product's signature — it is the coin. Used sparingly:
+     the balance, the primary action, the one number that matters. */
+  --gold-100: #fdf3d9;
+  --gold-300: #f2d68a;
+  --gold-400: #e9c25c;
+  --gold-500: #dfa93a;
+  --gold-600: #c08a24;
+  --gold-700: #96691a;
+
+  --teal-400: #3ecfb2;
+  --teal-500: #1fb59a;
+  --teal-600: #0f8c78;
+
+  --coral-400: #ff7a6b;
+  --coral-500: #f2564a;
+  --coral-600: #cf3b33;
+
+  --violet-400: #a78bfa;
+  --violet-500: #8b6df0;
+
+  --blue-400: #6aa8ff;
+  --blue-500: #4287f5;
+
+  /* -- 2. semantics ------------------------------------------------- */
+
+  /* surfaces, back to front */
+  --bg-base: var(--ink-950);
+  --bg-sunken: var(--ink-900);
+  --surface-1: var(--ink-850);
+  --surface-2: var(--ink-800);
+  --surface-3: var(--ink-750);
+  --surface-hover: var(--ink-750);
+  --surface-active: var(--ink-700);
+
+  --border-subtle: rgb(255 255 255 / 6%);
+  --border-default: rgb(255 255 255 / 10%);
+  --border-strong: rgb(255 255 255 / 18%);
+
+  --text-primary: var(--ink-050);
+  --text-secondary: var(--ink-300);
+  --text-tertiary: var(--ink-400);
+  --text-inverse: var(--ink-950);
+
+  --accent: var(--gold-400);
+  --accent-strong: var(--gold-500);
+  --accent-soft: rgb(233 194 92 / 12%);
+  --accent-text: var(--gold-300);
+  --on-accent: #241b04;
+
+  --positive: var(--teal-400);
+  --positive-soft: rgb(62 207 178 / 12%);
+  --negative: var(--coral-400);
+  --negative-soft: rgb(255 122 107 / 12%);
+  --warning: #f0b429;
+  --warning-soft: rgb(240 180 41 / 12%);
+  --info: var(--blue-400);
+  --info-soft: rgb(106 168 255 / 12%);
+
+  --focus-ring: var(--gold-400);
+
+  /* Chart series. Category colours come from the database hue, these are
+     the fixed slots for everything else. */
+  --chart-grid: rgb(255 255 255 / 6%);
+  --chart-axis: var(--ink-400);
+  --chart-primary: var(--gold-400);
+  --chart-secondary: var(--teal-400);
+
+  /* -- 3. space ----------------------------------------------------- */
+  /* A 4px base. Named by size, not by use, so a gap and a padding of the
+     same visual weight are literally the same token. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* -- 4. radii ----------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* -- 5. elevation -------------------------------------------------- */
+  /* Two-layer shadows: a tight contact shadow plus a soft ambient one. */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
+  --shadow-lg: 0 4px 8px rgb(0 0 0 / 30%), 0 24px 48px rgb(0 0 0 / 45%);
+  --shadow-glow: 0 0 0 1px rgb(233 194 92 / 25%), 0 8px 32px rgb(233 194 92 / 12%);
+
+  /* -- 6. type ------------------------------------------------------- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* A 1.2 modular scale, rounded to whole pixels at the small end where
+     fractional sizes make text look blurry. */
+  --text-2xs: 0.6875rem; /* 11 */
+  --text-xs: 0.75rem;    /* 12 */
+  --text-sm: 0.8125rem;  /* 13 */
+  --text-base: 0.875rem; /* 14 — the app's body size; this is a dense tool */
+  --text-md: 1rem;       /* 16 */
+  --text-lg: 1.125rem;   /* 18 */
+  --text-xl: 1.375rem;   /* 22 */
+  --text-2xl: 1.75rem;   /* 28 */
+  --text-3xl: 2.25rem;   /* 36 */
+  --text-4xl: 3rem;      /* 48 */
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-caps: 0.08em;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* -- 7. motion ----------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  /* -- 8. layout ----------------------------------------------------- */
+  --topbar-height: 60px;
+  --content-max: 1440px;
+  --z-base: 1;
+  --z-sticky: 20;
+  --z-drawer: 60;
+  --z-modal: 80;
+  --z-toast: 100;
+}
+
+/* Light theme re-points the semantic layer only. No component changes. */
+[data-theme="light"] {
+  --bg-base: #f7f7f9;
+  --bg-sunken: #eff0f4;
+  --surface-1: var(--ink-000);
+  --surface-2: var(--ink-000);
+  --surface-3: var(--ink-050);
+  --surface-hover: #f4f5f8;
+  --surface-active: #eaecf1;
+
+  --border-subtle: rgb(14 16 24 / 7%);
+  --border-default: rgb(14 16 24 / 12%);
+  --border-strong: rgb(14 16 24 / 22%);
+
+  --text-primary: #14161d;
+  --text-secondary: #545b6b;
+  --text-tertiary: #767d8d;
+  --text-inverse: var(--ink-000);
+
+  --accent: var(--gold-600);
+  --accent-strong: var(--gold-700);
+  --accent-soft: rgb(192 138 36 / 12%);
+  --accent-text: var(--gold-700);
+  --on-accent: #ffffff;
+
+  --positive: var(--teal-600);
+  --positive-soft: rgb(15 140 120 / 12%);
+  --negative: var(--coral-600);
+  --negative-soft: rgb(207 59 51 / 10%);
+  --warning: #a86a08;
+  --warning-soft: rgb(168 106 8 / 12%);
+  --info: #2b6fd4;
+  --info-soft: rgb(43 111 212 / 10%);
+
+  --focus-ring: var(--gold-600);
+
+  --chart-grid: rgb(14 16 24 / 8%);
+  --chart-axis: #767d8d;
+  --chart-primary: var(--gold-600);
+  --chart-secondary: var(--teal-600);
+
+  --shadow-sm: 0 1px 2px rgb(14 16 24 / 6%);
+  --shadow-md: 0 1px 2px rgb(14 16 24 / 6%), 0 8px 24px rgb(14 16 24 / 8%);
+  --shadow-lg: 0 2px 6px rgb(14 16 24 / 8%), 0 24px 48px rgb(14 16 24 / 12%);
+  --shadow-glow: 0 0 0 1px rgb(192 138 36 / 30%), 0 8px 32px rgb(192 138 36 / 10%);
+}
