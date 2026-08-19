@@ -79,7 +79,6 @@ export function DataHealthPanel() {
                 ? `${formatPercent((data.rows_repaired / data.rows_in) * 100, 1)} of the file`
                 : undefined
             }
-            tone="accent"
             loading={isPending}
           />
           <Stat

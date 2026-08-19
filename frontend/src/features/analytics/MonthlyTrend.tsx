@@ -39,7 +39,7 @@ export function MonthlyTrend({ points, selected, onToggle }: MonthlyTrendProps) 
 
   return (
     <div className={styles.wrap}>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={points} margin={{ top: 8, right: 4, bottom: 0, left: -12 }} barGap={2}>
           {/* Vertical gradients, so each bar is lit from the top rather than
               being a flat block of colour. */}

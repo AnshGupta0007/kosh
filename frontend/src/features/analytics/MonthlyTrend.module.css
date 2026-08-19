@@ -1,7 +1,15 @@
 .wrap {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  /* ResponsiveContainer needs a bounded parent to measure against. */
+  min-height: 320px;
+}
+
+.wrap > :first-child {
+  flex: 1;
+  min-height: 0;
 }
 
 .bar {

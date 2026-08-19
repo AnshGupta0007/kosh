@@ -42,7 +42,7 @@
 }
 
 .repaired {
-  background: var(--accent);
+  background: var(--warning);
 }
 
 .quarantined {

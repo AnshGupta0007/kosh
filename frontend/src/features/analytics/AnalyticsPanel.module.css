@@ -32,6 +32,13 @@
   gap: var(--space-6);
 }
 
+/* Cards in a row stretch to the tallest; their contents must stretch too,
+   or the shorter one ends in a pool of empty card. */
+.chartGrid > * {
+  display: flex;
+  flex-direction: column;
+}
+
 .chartSkeleton {
   height: 300px;
   background: linear-gradient(

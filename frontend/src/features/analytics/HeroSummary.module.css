@@ -44,7 +44,7 @@
 }
 
 .subline {
-  max-width: 46ch;
+  max-width: 58ch;
   margin-top: var(--space-3);
   color: var(--text-tertiary);
   font-size: var(--text-md);
@@ -62,12 +62,12 @@
 
 /* Capped width and a taller box: stretched across the full column at 46px
    it read as a stray line rather than as a chart of the year. */
+/* No max-width: an arbitrary cap left 260px of dead column beside it. */
 .spark {
   display: block;
   width: 100%;
-  max-width: 520px;
-  height: 68px;
-  margin-top: var(--space-5);
+  height: 92px;
+  margin-top: var(--space-6);
 }
 
 .sparkLabel {

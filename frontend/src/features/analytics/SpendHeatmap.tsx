@@ -79,7 +79,13 @@ export function SpendHeatmap({
   return (
     <div className={styles.wrap}>
       <div className={styles.scroller}>
-        <div className={styles.calendar}>
+        {/* The week count drives the grid, so the calendar fills its
+            container at any width instead of sitting in fixed 14px cells
+            with dead space beside them. */}
+        <div
+          className={styles.calendar}
+          style={{ "--weeks": weeks.length } as React.CSSProperties}
+        >
           <div className={styles.monthRow} aria-hidden>
             {monthLabels.map((label) => (
               <span
