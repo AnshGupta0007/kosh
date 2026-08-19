@@ -1,0 +1,23 @@
+# Local PostgreSQL 18 for Kosh.
+# The brief requires PostgreSQL (18 preferred), so the version is pinned here
+# rather than relying on whatever happens to be installed on the host.
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: kosh-postgres
+    environment:
+      POSTGRES_USER: kosh
+      POSTGRES_PASSWORD: kosh
+      POSTGRES_DB: kosh
+    ports:
+      - "5433:5432" # 5433 on the host to avoid clashing with a local Postgres
+    volumes:
+      - kosh_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kosh -d kosh"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  kosh_pgdata:
