@@ -1,0 +1,192 @@
+# Kosh
+
+**A credit-card payments, spend analytics and coin rewards dashboard, built over the 10,000-row dataset supplied with the Digital Alpha take-home.**
+
+Next.js 15 · TypeScript · FastAPI · PostgreSQL 18
+
+---
+
+## Live
+
+| | |
+|---|---|
+| **Web** | _add after deploy_ |
+| **API** | _add after deploy_ |
+| **API docs** | `/docs` on the API host |
+| **Walkthrough video** | _add link_ |
+
+---
+
+## What it does
+
+**Overview** — five KPIs, a category donut, a monthly trend, a top-merchant ranking and a payment-method split, sitting above the full 10,000-row transactions table. Filter by category, status, method, date range, amount range and type; search merchants as you type; sort by date, amount, merchant or coins. Click any row for full detail including the untouched source record.
+
+**Cross-filtering works in both directions.** Clicking a donut slice, a month bar or a merchant filters the table. Filtering the table reshapes every chart. Neither component knows the other exists — they both read the same filter state out of the URL.
+
+**Rewards** — a coin balance that is visible in the header on every screen, a six-item catalogue, and a select → confirm → done redeem flow. The balance updates optimistically and rolls back cleanly if the call fails. The backend rejects an unaffordable or unknown redeem with a proper status code, and a retried request replays instead of charging twice.
+
+**Data health** — the part I would show first. The supplied `transactions.json` is deliberately dirty. This screen is the loader's own report of what it found and what it did about it, read straight out of the database.
+
+---
+
+## What I found in the data
+
+`transactions.json` needed repair on **4,772 of its 10,000 rows**. None of this is hypothetical — every item is a count from the loaded database:
+
+| What | Rows | What the loader did |
+|---|---:|---|
+| Timestamps with a `+05:30` offset | 1,961 | Converted to UTC, offset preserved in the source record |
+| Timestamps as epoch milliseconds | 1,007 | Parsed as millis, not seconds |
+| Timestamps as `dd/mm/yyyy` | 841 | Day-first — proven by values like `31/12/2025` |
+| Timestamps with no clock time | 715 | Anchored to 00:00 IST so the row keeps its stated date |
+| Blank or null category | 200 | Backfilled from the merchant's dominant category |
+| Negative amounts | 148 | Treated as refunds: kept, marked as inflow, earn no coins |
+| Reused transaction ids | 80 | Both kept — the source id is genuinely not unique |
+| `"success"` instead of `"SUCCESS"` | 25 | Normalised to the enum value |
+| Amounts as strings (`"5065.00"`) | 20 | Parsed with `Decimal`, stored as integer paise |
+| One payment of ₹99,99,99,999 | 1 | Quarantined: still listed, excluded from analytics and coins |
+
+Nothing was dropped. Every repair is recorded per row and shown in the detail drawer, so a repaired row is always identifiable rather than silently rewritten.
+
+---
+
+## Running it locally
+
+**Needs:** Docker, Python 3.11+, Node 20+. Nothing else.
+
+```bash
+git clone <this-repo> && cd kosh
+make setup     # Postgres 18 + deps + schema + all 10,000 rows
+make dev       # API on :8000, web on :3000
+```
+
+`make setup` takes about two minutes, most of it `npm install`. The seed itself loads all 10,000 rows in **~600 ms**.
+
+<details>
+<summary>Without <code>make</code></summary>
+
+```bash
+# 1. PostgreSQL 18
+docker compose up -d
+
+# 2. Config
+cp .env.example .env && cp .env.example backend/.env
+cp frontend/.env.local.example frontend/.env.local
+
+# 3. Backend + schema + data (one command, idempotent)
+python3 -m venv backend/.venv
+backend/.venv/bin/pip install -e "./backend[dev]"
+cd backend && ../backend/.venv/bin/python -m app.seed.run && cd ..
+
+# 4. Frontend
+cd frontend && npm install && cd ..
+
+# 5. Run
+cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000   # terminal 1
+cd frontend && npm run dev                                          # terminal 2
+```
+</details>
+
+**The seed command is `python -m app.seed.run` from `backend/`.** It drops and recreates the schema, normalises the dataset, loads it, mints the coin ledger and writes the data-quality report. Re-running it is safe.
+
+```bash
+make test    # 36 backend tests against a real throwaway Postgres database
+make lint    # ruff + tsc + next lint
+make reset   # destroy the volume and rebuild from nothing
+```
+
+---
+
+## Stack and structure
+
+```
+backend/                    FastAPI — routes decide nothing, services decide everything
+  app/api/routes/           HTTP: parse, delegate, serialise
+  app/api/filters.py        the filter contract shared by the table and the charts
+  app/services/             business logic (redeem, analytics, listing)
+  app/repositories/         all SQL, and the only place it lives
+  app/db/schema.sql         the schema, hand-written and commented
+  app/seed/etl.py           normalisation rules — pure functions, unit-tested
+  app/seed/run.py           the one-command seed
+  tests/                    36 tests, real Postgres, no mocks
+
+frontend/
+  src/components/ui/        the internal design system (Button, Card, Table…)
+  src/features/             transactions · analytics · rewards · quality
+  src/lib/filters.ts        URL ⇄ filter state
+  src/styles/tokens.css     every colour, space, type step and shadow
+```
+
+**Frontend:** Next.js 15 App Router, React 19, TypeScript in strict mode, CSS Modules over design tokens (no Tailwind, no UI library), TanStack Query for server state, Recharts for the two charts.
+
+**Backend:** FastAPI, SQLAlchemy Core, psycopg 3. Layered so a route never touches SQL and a repository never returns an HTTP status.
+
+**Database:** PostgreSQL 18 — a real schema with enum types, check constraints, partial unique indexes and money as `BIGINT` paise.
+
+---
+
+## API
+
+| | |
+|---|---|
+| `GET /api/transactions` | Paginated, filtered, sorted — **in Postgres**, not the browser |
+| `GET /api/transactions/{id}` | Full detail plus the untouched source record |
+| `GET /api/transactions/options` | Filter values, derived from the data |
+| `GET /api/analytics` | KPIs, category, monthly, method and merchant breakdowns |
+| `GET /api/wallet/balance` | Balance, summed from the ledger on every read |
+| `GET /api/rewards` | Catalogue with server-computed affordability |
+| `POST /api/rewards/redeem` | 201 · 404 unknown reward · 409 unaffordable · 422 malformed |
+| `GET /api/rewards/redemptions` | Redemption history |
+| `GET /api/data-quality` | The ingestion report |
+| `GET /api/health` | Liveness and row count |
+
+All ten endpoints take the same filter parameters where it makes sense, which is what keeps the charts and the table honest.
+
+---
+
+## Done / not done
+
+### Done
+
+- [x] Transactions table on all 10,000 rows — hand-built, no component library
+- [x] Filter by category, date range, amount range, status, method and type, all combinable
+- [x] Search merchants as you type (debounced)
+- [x] Sort by date, amount, merchant and coins
+- [x] Row detail in a drawer, including the raw source record
+- [x] **Server-side** pagination, filtering and sorting
+- [x] Spend by category **and** monthly trend, plus merchant and method breakdowns
+- [x] **Two-way** cross-filtering between charts and table
+- [x] Coin balance visible on every screen
+- [x] Six rewards, select → confirm → done, with optimistic update and rollback
+- [x] Backend rejects unaffordable (409) and unknown (404) redeems
+- [x] Idempotency keys, so a retry cannot double-charge
+- [x] PostgreSQL 18, real schema, one-command seed
+- [x] Hand-built modal and drawer: focus trap, Escape, focus restore
+- [x] Light and dark themes, no flash on load
+- [x] Responsive to 360px — the table becomes cards, same markup
+- [x] 36 backend tests, including six on the redeem endpoint
+- [x] Accessibility: semantic table, `aria-sort`, keyboard-operable rows and charts, skip link, live-region toasts, reduced-motion support
+- [x] ⌘K command palette
+- [x] Data health screen
+
+### Not done
+
+- **Not deployed at the time of writing.** Everything is deploy-ready — `backend/Dockerfile`, `render.yaml`, `frontend/vercel.json` and a `DATABASE_URL` normaliser for hosted providers — but the live URLs are not filled in above yet.
+- **No authentication.** Single seeded demo user. Every query is still scoped by `user_id`, so adding auth means changing one dependency function.
+- **No frontend tests.** The backend is covered; the UI was verified by hand across widths and themes. If I had another hour it would go on the filter reducer and the optimistic-rollback path.
+- **Virtualisation.** Server-side pagination made it unnecessary; see `DECISIONS.md`.
+- **Redemptions do not expire, and vouchers are not real.** The code is generated, not issued.
+
+### Known issues
+
+- Recharts renders the donut and the bars into SVG that does not resize until the next animation frame, so a fast window resize can leave a chart briefly mis-sized. It corrects itself.
+- `useFilterOptions` caches with `staleTime: Infinity`. Re-seeding while the app is open needs a refresh to pick up new categories.
+- The success-rate KPI turns red below 90%. The supplied data sits at 88%, so it is red by default — that is the data, not a bug.
+
+---
+
+## Also in this repo
+
+- **[ASSUMPTIONS.md](ASSUMPTIONS.md)** — every product call I made where the brief was open, and why
+- **[DECISIONS.md](DECISIONS.md)** — the technical choices that mattered, including the ones I would revisit
+- **[AI-USAGE.md](AI-USAGE.md)** — what I used AI for, and four things it got wrong that I had to fix
