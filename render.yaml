@@ -1,10 +1,11 @@
-# Render blueprint: API + managed PostgreSQL.
+# Render blueprint — API only.
 #
-# After the first deploy, seed the hosted database once from the service
-# shell:  python -m app.seed.run --file /app/data/transactions.json
+# The database lives on Neon (free tier, persistent, PostgreSQL 17), not on
+# Render, so there is no `databases:` block here. Set DATABASE_URL to the
+# Neon connection string in the Render dashboard.
 #
-# The frontend goes to Vercel separately (it is a Next.js app, and Vercel's
-# free tier serves it better than a Render web service would).
+# The frontend goes to Vercel separately; it is a Next.js app and Vercel's
+# free tier serves it far better than a Render web service would.
 services:
   - type: web
     name: kosh-api
@@ -15,16 +16,13 @@ services:
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
+      # Neon connection string. app/core/config.py rewrites the scheme to
+      # postgresql+psycopg:// automatically, so paste Neon's URL unchanged.
       - key: DATABASE_URL
-        fromDatabase:
-          name: kosh-db
-          property: connectionString
+        sync: false
+      # Your Vercel production URL. Preview deployments are already allowed
+      # by the *.vercel.app regex in app/main.py.
       - key: CORS_ORIGINS
-        sync: false # set to your Vercel URL after the frontend deploys
+        sync: false
       - key: PYTHON_VERSION
-        value: "3.12"
-
-databases:
-  - name: kosh-db
-    plan: free
-    postgresMajorVersion: "16" # Render's newest free tier; 18 locally
+        value: "3.12.7"
