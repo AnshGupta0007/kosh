@@ -1,0 +1,61 @@
+.head {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: var(--space-5) var(--space-5) var(--space-1);
+}
+
+.title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.subtitle {
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.subtitle strong {
+  color: var(--text-secondary);
+  font-weight: var(--weight-semibold);
+}
+
+.refunded {
+  color: var(--positive) !important;
+}
+
+.headControls {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* The mobile sort control is the counterpart of the hidden table header —
+   only one of the two is ever on screen. */
+.mobileSort {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .head {
+    padding-inline: var(--space-4);
+  }
+
+  .mobileSort {
+    display: block;
+  }
+
+  .density {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .headControls {
+    width: 100%;
+  }
+}

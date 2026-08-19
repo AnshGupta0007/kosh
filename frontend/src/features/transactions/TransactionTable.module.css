@@ -1,0 +1,418 @@
+/* =====================================================================
+   The transactions table.
+
+   Hand-written, no table library. Three things drive the design:
+
+   1. The header must stay visible while scrolling 10,000 rows, so the
+      scroll lives in a bounded region and <thead> sticks to its top.
+      (Page-level sticky is not an option: a horizontally scrollable
+      ancestor computes overflow-y to auto and breaks it.)
+   2. Columns drop out in a deliberate order as the viewport narrows —
+      method first, then category and coins — until at 760px the rows
+      re-lay out as cards using grid areas on the same <tr>.
+   3. Every interactive state is explicit: hover, focus-visible, selected,
+      loading, empty, error.
+   ===================================================================== */
+
+.wrapper {
+  position: relative;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Indeterminate bar while a new page is fetched. The old rows stay put. */
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.progress::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 34%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: sweep 1.1s var(--ease-in-out) infinite;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(360%);
+  }
+}
+
+.scroll {
+  max-height: min(62vh, 720px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.scroll:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+/* Rows dim slightly while a refetch is in flight — visible enough to signal
+   "this is about to change", faint enough to keep reading. */
+.stale tbody {
+  opacity: 0.55;
+}
+
+/* ------------------------------------------------------------- header */
+.thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.th {
+  position: relative;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-2);
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  white-space: nowrap;
+  /* border-collapse: separate means the border has to be drawn here, or it
+     scrolls away with the body. */
+  box-shadow: inset 0 -1px 0 var(--border-default);
+}
+
+.thChevron {
+  width: 36px;
+  background: var(--surface-2);
+  box-shadow: inset 0 -1px 0 var(--border-default);
+}
+
+.alignEnd {
+  text-align: right;
+}
+
+.sortButton {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.alignEnd .sortButton {
+  flex-direction: row-reverse;
+}
+
+.sortButton:hover {
+  color: var(--text-primary);
+}
+
+.sorted {
+  color: var(--accent-text);
+}
+
+.sortGlyph {
+  flex-shrink: 0;
+  color: currentcolor;
+  opacity: 0.7;
+}
+
+.sortGlyphActive {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- rows */
+.tr {
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+.tdChevron {
+  width: 36px;
+  padding-right: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: right;
+}
+
+.tr:hover {
+  background: var(--surface-hover);
+}
+
+.tr:hover .chevron {
+  color: var(--text-secondary);
+  transform: translateX(2px);
+}
+
+/* Focus is drawn as an inset ring: an outline on a table row is clipped by
+   the scroll container on the leading edge. */
+.tr:focus-visible {
+  outline: none;
+  background: var(--surface-hover);
+  box-shadow: inset 3px 0 0 var(--accent), inset 0 0 0 1px var(--border-strong);
+}
+
+.selected {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.selected:hover {
+  background: var(--accent-soft);
+}
+
+/* A row the loader could not trust. Struck through, but still listed — the
+   user's history should never silently lose a line. */
+.quarantined .cellAmount {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+  text-decoration-color: var(--negative);
+}
+
+.skeletonRow td {
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* -------------------------------------------------------------- cells */
+.cellDate {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  white-space: nowrap;
+}
+
+.dateMain {
+  color: var(--text-primary);
+}
+
+.dateTime {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+}
+
+.cellMerchant {
+  min-width: 0;
+}
+
+.merchant {
+  display: block;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.externalId {
+  display: block;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+}
+
+.category {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  background: var(--surface-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-2xs);
+  white-space: nowrap;
+}
+
+.uncategorised {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+  font-style: italic;
+}
+
+.method {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.cellStatus {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Marks a row the loader repaired. Deliberately quiet — it is provenance,
+   not an error. */
+.flagDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--info);
+  opacity: 0.75;
+  cursor: help;
+}
+
+.zeroCoins {
+  color: var(--text-tertiary);
+}
+
+.cellAmount {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+
+.refund {
+  color: var(--positive);
+}
+
+.chevron {
+  display: inline-block;
+  color: var(--text-tertiary);
+  opacity: 0.5;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+/* ------------------------------------------------------------ density */
+.compact .td,
+.compact .th,
+.compact .tdChevron,
+.compact .skeletonRow td {
+  padding-block: var(--space-2);
+}
+
+.compact .dateTime,
+.compact .externalId {
+  display: none;
+}
+
+/* ------------------------------------------------------- responsive */
+/* Columns leave in order of how little they are missed. */
+@media (max-width: 1080px) {
+  .hideLg {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .hideMd {
+    display: none;
+  }
+}
+
+/* Below this the table stops being a grid of columns and becomes a list of
+   cards — same <table>, same cells, re-placed with grid areas. */
+@media (max-width: 760px) {
+  .scroll {
+    max-height: none;
+  }
+
+  .table,
+  .table tbody {
+    display: block;
+  }
+
+  .thead {
+    /* The sort control moves into the toolbar at this width. */
+    display: none;
+  }
+
+  .tr {
+    display: grid;
+    grid-template-areas:
+      "merchant amount"
+      "date     status";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .tr:focus-visible,
+  .selected {
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  .td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .td[data-cell="merchant"] {
+    grid-area: merchant;
+  }
+
+  .td[data-cell="amount"] {
+    grid-area: amount;
+    align-self: center;
+    font-size: var(--text-base);
+  }
+
+  .td[data-cell="date"] {
+    grid-area: date;
+    flex-direction: row;
+    gap: var(--space-2);
+    align-items: baseline;
+  }
+
+  .td[data-cell="status"] {
+    grid-area: status;
+    justify-content: flex-end;
+  }
+
+  .tdChevron,
+  .skeletonRow .tdChevron {
+    display: none;
+  }
+
+  .skeletonRow {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .skeletonRow td {
+    padding: 0;
+    border-bottom: 0;
+  }
+}
+
+/* At 360px the merchant id is the first thing to go. */
+@media (max-width: 400px) {
+  .externalId {
+    display: none;
+  }
+
+  .tr {
+    padding-inline: var(--space-3);
+  }
+}
