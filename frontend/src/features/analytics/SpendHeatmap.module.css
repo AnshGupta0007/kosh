@@ -26,14 +26,14 @@
 }
 
 .calendar {
-  min-width: 660px;
-}
-
-.calendar {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  min-width: min-content;
+  /* A year is 55 columns. Below roughly this width the squares stop being
+     squares and the rows run together, so the calendar keeps its size and
+     the container scrolls instead of collapsing. An earlier duplicate rule
+     set min-content here and silently won, which is what caused that. */
+  min-width: 840px;
 }
 
 .monthRow {
@@ -69,8 +69,12 @@
 .weekday {
   display: flex;
   align-items: center;
+  overflow: hidden;
   color: var(--text-tertiary);
-  font-size: var(--text-2xs);
+  font-size: 10px;
+  /* Body line-height would make each label 25px tall inside a ~12px row,
+     so they overlapped each other and the grid. */
+  line-height: 1;
 }
 
 .grid {
