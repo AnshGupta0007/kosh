@@ -84,6 +84,14 @@
   font-size: var(--text-2xs);
 }
 
+/* A native date field renders its own dd / mm / yyyy sub-fields plus a
+   picker icon. Give it too little room and Chrome silently truncates the
+   year to three digits instead of wrapping or scrolling — at 16px text it
+   needs about 140px. */
+.input[type="date"] {
+  min-width: 140px;
+}
+
 /* Date inputs render a native picker icon that is invisible on dark. */
 .input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.6);
